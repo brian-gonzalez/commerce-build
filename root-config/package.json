@@ -1,0 +1,31 @@
+{
+  "scripts": {
+    "dw-init": "dw-utils init",
+    "deploy": "npm run build --",
+    "postdeploy": "dw-utils clean",
+    "build": "npm-run-all --parallel \"build:* -- {@}\" --",
+    "build:js": "webpack --progress --js",
+    "build:css": "webpack --progress --css",
+    "watch": "npm-run-all --parallel \"watch:* -- {@}\" --",
+    "watch:dw": "dw-utils watch",
+    "watch:js": "npm run build:js -- --watch",
+    "watch:css": "npm run build:css -- --watch",
+    "bundle-report": "webpack --json > stats.json && webpack-bundle-analyzer stats.json"
+  },
+  "config": {
+    "cartridge": "app_accelerator_core",
+    "js": {
+      "rootFiles": true,
+      "revolverPath": "app_accelerator_core, app_storefront_base",
+      "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
+    },
+    "styles": {
+      "keepOriginalLocation": true,
+      "mainDirName": "client",
+      "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss"
+    }
+  },
+  "devDependencies": {
+    "@borngroup/born-build": "^1.0.0",
+  }
+}

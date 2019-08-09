@@ -1,0 +1,11 @@
+# Ignore all files in project's js folder which indludes default SFCC files
+**/cartridges/app_storefront_base/cartridge/client/**/*.js
+
+# Configuration files to ignore. Useful for editors that eslint inline.
+webpack.config.js
+scss.config.js
+postcss.config.js
+
+coverage/
+doc/
+bin/

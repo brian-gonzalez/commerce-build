@@ -1,0 +1,18 @@
+node_modules/
+
+# ignore compiled source files and maps
+**/app_storefront_base/cartridge/static/**/js
+**/app_storefront_base/cartridge/static/**/css
+**/app_accelerator_core/cartridge/static/**/js
+**/app_accelerator_core/cartridge/static/**/css
+
+coverage/
+npm-debug.log
+.idea/
+dw.json
+.DS_Store
+test/appium/webdriver/config.json
+.history
+
+#Webpack Stats
+stats.json
