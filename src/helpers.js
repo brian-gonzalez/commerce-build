@@ -24,7 +24,7 @@ const cwd = process.cwd();
  * @return {[String | Boolean]}              [description]
  */
 function getOption(optionName, defaultValue, scope = 'js') {
-    let parsedOption = minimist(process.argv)[optionName] || process.env[`npm_config_env_${optionName.toLowerCase()}`] || process.env[`npm_package_config_${scope}_${optionName}`] || process.env[`npm_package_config_${optionName}`] || defaultValue;
+    let parsedOption = minimist(process.argv)[optionName] || process.env[`npm_config_env_${optionName}`] || process.env[`npm_package_config_${scope}_${optionName}`] || process.env[`npm_package_config_${optionName}`] || defaultValue;
 
     return parsedOption === 'true' ? true : (parsedOption === 'false' ? false : parsedOption);
 }
