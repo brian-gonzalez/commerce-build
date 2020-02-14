@@ -127,7 +127,7 @@ function getIncludePaths() {
     customPaths.forEach(function(currentPath) {
         let expandedPath = path.resolve(currentPath);
 
-        if (includePaths.indexOf(expandedPath) !== -1) {
+        if (currentPath && includePaths.indexOf(expandedPath) === -1) {
             includePaths.push(expandedPath);
         }
     });
