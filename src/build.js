@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 const webpackMerge = require('webpack-merge');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const revolverPlugin = require('revolver-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
@@ -32,9 +33,10 @@ function _getJSConfig(currentCartridge, options) {
                 rules: [{
                     test: /\.js$/,
                     exclude: [/node_modules\/(?!@borngroup)/],
-                    use: ['babel-loader', 'eslint-loader']
+                    use: ['babel-loader']
                 }]
             },
+            plugins: [new ESLintPlugin()],
             resolve: {
                 plugins: (function(useRevolver) {
                     let plugins = [];
