@@ -102,8 +102,10 @@ function _getStylesConfig(currentCartridge, options) {
                     {
                         loader: 'sass-loader',
                         options: {
-                            includePaths: bornHelpers.getIncludePaths(),
-                            sourceMap: true
+                            sourceMap: true,
+                            sassOptions: {
+                                includePaths: bornHelpers.getIncludePaths()
+                            }
                         }
                     }]
                 }]
