@@ -41,7 +41,7 @@
     "npm-run-all": "^4.1.5",
     "postcss-css-variables": "^0.17.0",
     "postcss-loader": "^4.2.0",
-    "revolver-webpack-plugin": "^1.0.3",
+    "revolver-webpack-plugin": "^1.0.4",
     "sass-loader": "^10.1.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.1.1",
