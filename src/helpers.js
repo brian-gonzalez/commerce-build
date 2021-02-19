@@ -56,7 +56,8 @@ function getJSPaths(currentCartridge, options) {
     let pathData = _getPathData(currentCartridge),
         revolverAllowBase = getOption('revolverBase', false),
         revolverPaths = options.revolverPaths.paths,
-        mainPaths = getMainPaths(pathData.inputPath, options.mainFiles);
+        mainPaths = getMainPaths(pathData.inputPath, options.mainFiles),
+        revolverDisableList = getOption('revolverDisable', '').split(/(?:,| )+/);
 
     pathData.entryObject = options.getRootFiles ? _getRootFiles(pathData) : {};
 
@@ -65,9 +66,9 @@ function getJSPaths(currentCartridge, options) {
         pathData.entryObject[options.mainEntryName] = mainPaths;
     }
 
-    //This prevents the "base" cartridge from resolving files from cartridges with higher priority (i.e. before the last on the list)
-    //This can be overriden by setting revolverBase: true
-    if (!revolverAllowBase && options.revolverPaths.useRevolver && revolverPaths[revolverPaths.length - 1].name === currentCartridge) {
+    //This prevents a cartridge from resolving files from cartridges with higher priority (i.e. before the last on the list)
+    //This can be overriden by adding the desired cartridge to the `revolverDisable` option.
+    if (options.revolverPaths.useRevolver && revolverDisableList.indexOf(currentCartridge) !== -1) {
         options.revolverPaths.useRevolver = false;
     }
 
@@ -156,22 +157,18 @@ function getRevolverPaths(scope = 'js') {
     revolverCartridgeArray.forEach(function(currentCartridge) {
         let cartridgeParts = currentCartridge.split('::'),
             cartridgeName = cartridgeParts[0],
-            inputPath = _getPathData(cartridgeName, scope).inputPath,
-            mainDirIndex = inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 1,
-            mainPath = inputPath.substring(0, mainDirIndex);
+            defaultInputPath = _getPathData(cartridgeName, scope).inputPath,
+            mainDirIndex = defaultInputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 1,
+            mainPath = defaultInputPath.substring(0, mainDirIndex);
 
-        //Constructs a dynamic path if the provided `inputPath` has blob-like patterns.
-        inputPath = glob.hasMagic(inputPath) ? _constructInputPath(mainPath, defaultLocale, aliasDirName) : inputPath;
+        //Constructs a dynamic path if the provided `defaultInputPath` has blob-like patterns.
+        defaultInputPath = glob.hasMagic(defaultInputPath) ? _constructInputPath(mainPath, defaultLocale, aliasDirName) : defaultInputPath;
 
         //Build aliases based on the `cartridgeParts` Array.
-        if (useLocales) {
-            cartridgeParts.forEach(currentPart => _getAliasPerLocale(aliasObject, currentPart, mainPath, mainDirIndex, aliasDirName));
-        }
-
-        cartridgeParts.forEach(currentPart => aliasObject[currentPart] = path.join(cwd, inputPath));
+        cartridgeParts.forEach(currentCartridgePart => _getAliasPaths(aliasObject, currentCartridgePart, defaultInputPath, {useLocales, mainPath, mainDirIndex, aliasDirName}));
 
         //Revolver paths do not currently work with locales.
-        revolverArray.push({name: cartridgeName, path: path.join(cwd, inputPath)});
+        revolverArray.push({name: cartridgeName, path: path.join(cwd, defaultInputPath)});
     });
 
     return {
@@ -182,6 +179,30 @@ function getRevolverPaths(scope = 'js') {
 }
 
 /**
+ * Returns a clean Array of all the cartridges that should be built.
+ * This method will look into a provided `cartridge` option, and if none is found then it will default to `revolverPath`.
+ * This fallback allows to simplify the setup by not need a dedicated `cartridge` option.
+ * @param  {String} scope [description]
+ * @return {[type]}       [description]
+ */
+function getCartridgeBuildList(scope = 'js') {
+    let originalCartridgeList = (getOption('cartridge', '', scope) || getOption('revolverPath', '', scope)).split(/(?:,| )+/),
+        buildDisableList = getOption('buildDisable', '', scope).split(/(?:,| )+/),
+        resultCartridgeList = [];
+
+    originalCartridgeList.forEach(function(currentCartridge) {
+        let cartridgeParts = currentCartridge.split('::');
+
+        //Skip cartridges that are present in the `buildDisable` option, as these should not be considered for a build.
+        if (buildDisableList.indexOf(cartridgeParts[0]) === -1) {
+            resultCartridgeList.push(cartridgeParts[0]);
+        }
+    });
+
+    return resultCartridgeList;
+}
+
+/**
  * Builds an input path using the provided parameters.
  */
 function _constructInputPath(mainPath, currentLocale, aliasDirName) {
@@ -189,15 +210,21 @@ function _constructInputPath(mainPath, currentLocale, aliasDirName) {
 }
 
 /**
- * Generates an alias reference by locale path found.
+ * Generate full paths for each alias.
+ * Each alias of the same group will always point to the same path.
+ * Returns a mutated `aliasObject` with the path data.
  */
-function _getAliasPerLocale(aliasObject, currentCartridge, mainPath, mainDirIndex, aliasDirName) {
-    glob.sync(`${mainPath}/*/`).forEach(function(currentDir) {
-        let currentLocale = currentDir.substring(mainDirIndex).split('/')[1],
-            inputPath = _constructInputPath(mainPath, currentLocale, aliasDirName);
+function _getAliasPaths(aliasObject, currentCartridgePart, defaultInputPath, options = {}) {
+    if (options.useLocales) {
+        glob.sync(`${options.mainPath}/*/`).forEach(function(currentDir) {
+            let currentLocale = currentDir.substring(options.mainDirIndex).split('/')[1],
+                localeInputPath = _constructInputPath(options.mainPath, currentLocale, options.aliasDirName);
 
-        aliasObject[`${currentCartridge}/${currentLocale}`] = path.join(cwd, inputPath);
-    });
+            aliasObject[`${currentCartridgePart}/${currentLocale}`] = path.join(cwd, localeInputPath);
+        });
+    }
+
+    aliasObject[currentCartridgePart] = path.join(cwd, defaultInputPath);
 }
 
 /**
@@ -262,6 +289,21 @@ function writeFile(outputFile, targetLocationName, fileType = 'css', result) {
     }
 }
 
+/**
+ * Recursively delete directories when the `--clean` flaf is present.
+ * This is necessary to avoid pushing outdated files when a code deployment runs.
+ * @param  {[type]} targetPath [description]
+ */
+function cleanDirs(targetPath) {
+    if (getOption('clean', false)) {
+        fs.rm(targetPath, { recursive: true, force: true }, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+}
+
 exports.logFile = logFile;
 exports.writeFile = writeFile;
 exports.ensureDirs = ensureDirs;
@@ -270,4 +312,6 @@ exports.getJSPaths = getJSPaths;
 exports.getSCSSPaths = getSCSSPaths;
 exports.getIncludePaths = getIncludePaths;
 exports.getRevolverPaths = getRevolverPaths;
+exports.getCartridgeBuildList = getCartridgeBuildList;
 exports.defaultOptions = DEFAULTS;
+exports.cleanDirs = cleanDirs;

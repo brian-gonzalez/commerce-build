@@ -20,14 +20,20 @@ function _getJSConfig(currentCartridge, options) {
 
     //Only generate a config if there's an `jsPathData.entryObject`.
     if (Object.keys(jsPathData.entryObject).length) {
+        let outputPath = path.join(cwd, jsPathData.outputPath);
+
+        //This call should be removed once upgrading to Webpack 5.20+, since it comes with a built-in.
+        bornHelpers.cleanDirs(outputPath);
+
         return {
             mode: envType,
             entry: jsPathData.entryObject,
             name: `js-${currentCartridge}`,
             output: {
-                path: path.join(cwd, jsPathData.outputPath),
+                path: outputPath,
                 filename: '[name].js',
                 chunkFilename: '[name].js',
+                // clean: true
             },
             module: {
                 rules: [{
@@ -175,7 +181,7 @@ function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
  */
 function initConfig(customConfigList, mergeStrategy) {
     let scope = bornHelpers.getOption('css') ? 'styles' : 'js',
-        cartridgeList = bornHelpers.getOption('cartridge', null, scope).split(/(?:,| )+/),
+        cartridgeList = bornHelpers.getCartridgeBuildList(scope),
         options = {
             mainFiles: bornHelpers.getOption('mainFiles', 'main.js', scope).split(/(?:,| )+/),
             getRootFiles: bornHelpers.getOption('rootFiles', false, scope),
