@@ -1,10 +1,10 @@
 
 
-#BORN build process with Revolver
+# Commerce Build process with Revolver
 
 There are different scenarios covered by Revolver when working on a project with single or multiple store configurations. Revolver adapts to your setup depending on the parameters passed and which files are available.
 
-##Multiple stores configurations with either a main or independent store cartridge(s):
+## Multiple stores configurations with either a main or independent store cartridge(s):
 
 Let’s say you have multiple stores and each has its own styles and own set of JS. To build the default store, all you need to run is:
 
@@ -56,7 +56,7 @@ You can run parallel builds by specifying a list of cartridges on the `cartridge
 Each cartridge must have at least one *app.js* file (inside the *js/* or *js/born/* directories, or both). Otherwise it means this cartridge is not meant to host built files, so the build will dump the files into the cartridge specified in `config.cartridge` instead.
   
   
-##Single store with single or multiple locales:
+## Single store with single or multiple locales:
 
 Create a *style.scss* file inside the respective locale. If you have more than one locale, `@import` all the partials you need from the default or specific locale, then just replace those that are different for your current locale.
 
@@ -80,13 +80,13 @@ This assumes you've setup a default cartridge and an optional set of styles.inpu
         [...]
     }
 
-###Styles object:
+### Styles object:
 |Property|Description|
 |--|--|
 |`inputPath`|(optional) is the input path to your *.scss* files. The string uses a combination of interpolation and glob's magic patterns to determine the exact file that needs to be parsed. This property accepts a dynamic value for the `{cartridge}`.|    
 |`outputPath`|(optional) is the output path of your built *.css* files. The string works similar to `styles.inputPath`, but in addition to having a `{cartridge}` dynamic value, you can also format your string using the `{subDirectory}` and `{outputFile}` values.|
 
-###Styles object dynamic values:
+### Styles object dynamic values:
 |Value|Description|
 |--|--|
 |`{cartridge}`|It's value gets replaced with the cartridge name being processed during build time. For example, if you pass `--env.cartridge=your_main_cartridge,your_second_cartridge`, then the value of `{cartridge}` will become each of the specified cartridges| 
