@@ -26,6 +26,6 @@
     }
   },
   "devDependencies": {
-    "@borngroup/born-build": "^2.0.0",
+    "@bgss/CommerceBuild": "^2.0.0",
   }
 }

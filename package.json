@@ -1,5 +1,5 @@
 {
-  "name": "@borngroup/born-build",
+  "name": "@bgss/CommerceBuild",
   "description": "Build tool for storefronts",
   "keywords": [
     "build",
@@ -19,7 +19,7 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brian-gonzalez/born-build"
+    "url": "https://github.com/brian-gonzalez/CommerceBuild"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",

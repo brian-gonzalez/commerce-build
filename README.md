@@ -53,7 +53,7 @@ You can run parallel builds by specifying a list of cartridges on the `cartridge
 
 **Note: When running a command, use commas and no spaces between cartridge names. This is a limitation with Node.**  
   
-Each cartridge must have at least one *app.js* file (inside the *js/* or *js/born/* directories, or both). Otherwise it means this cartridge is not meant to host built files, so the build will dump the files into the cartridge specified in `config.cartridge` instead.
+Each cartridge must have at least one *app.js* file (inside the *js/* directories). Otherwise it means this cartridge is not meant to host built files, so the build will dump the files into the cartridge specified in `config.cartridge` instead.
   
   
 ## Single store with single or multiple locales:

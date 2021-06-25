@@ -1,4 +1,4 @@
-const build = require('@borngroup/born-build').build;
+const build = require('@bgss/CommerceBuild').build;
 
 let customConfigList = [
         // {
@@ -6,7 +6,7 @@ let customConfigList = [
         //     module: {
         //         rules: [{
         //             test: /\.js$/,
-        //             exclude: [/node_modules\/(?!@borngroup)/],
+        //             exclude: [/node_modules\/(?!@bgss)/],
         //             use: ['babel-loader']
         //         }]
         //     }
