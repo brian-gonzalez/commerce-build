@@ -8,22 +8,22 @@ const revolverPlugin = require('revolver-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 
-const bornHelpers = require('./helpers');
+const buildHelpers = require('./helpers');
 
 //Set to 'production' to disable mapping and enable minification:
-const envType = bornHelpers.getOption('type', 'development');
+const envType = buildHelpers.getFlagValue('type', 'development');
 const isProduction = envType === 'production';
 const cwd = process.cwd();
 
 function _getJSConfig(currentCartridge, options) {
-    let jsPathData = bornHelpers.getJSPaths(currentCartridge, options);
+    let jsPathData = buildHelpers.getJSPaths(currentCartridge, options);
 
     //Only generate a config if there's an `jsPathData.entryObject`.
     if (Object.keys(jsPathData.entryObject).length) {
         let outputPath = path.join(cwd, jsPathData.outputPath);
 
         //This call should be removed once upgrading to Webpack 5.20+, since it comes with a built-in.
-        bornHelpers.cleanDirs(outputPath);
+        buildHelpers.cleanDirs(outputPath);
 
         return {
             mode: envType,
@@ -38,7 +38,7 @@ function _getJSConfig(currentCartridge, options) {
             module: {
                 rules: [{
                     test: /\.js$/,
-                    exclude: [/node_modules\/(?!@borngroup)/],
+                    exclude: [/node_modules/],
                     use: ['babel-loader']
                 }]
             },
@@ -72,7 +72,7 @@ function _getJSConfig(currentCartridge, options) {
 }
 
 function _getStylesConfig(currentCartridge, options) {
-    let scssPathData = bornHelpers.getSCSSPaths(currentCartridge, options);
+    let scssPathData = buildHelpers.getSCSSPaths(currentCartridge, options);
 
     //Only generate a config if there's an `scssPathData.entryObject`.
     if (Object.keys(scssPathData.entryObject).length) {
@@ -110,7 +110,7 @@ function _getStylesConfig(currentCartridge, options) {
                         options: {
                             sourceMap: true,
                             sassOptions: {
-                                includePaths: bornHelpers.getIncludePaths()
+                                includePaths: buildHelpers.getIncludePaths()
                             }
                         }
                     }]
@@ -142,7 +142,7 @@ function _getStylesConfig(currentCartridge, options) {
  */
 function _setConfig(configList, options, currentCartridge) {
     //Push back the new config into the configList.
-    if (bornHelpers.getOption('js')) {
+    if (buildHelpers.getFlagValue('js')) {
         let currentConfig = _getJSConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -150,7 +150,7 @@ function _setConfig(configList, options, currentCartridge) {
         }
     }
 
-    if (bornHelpers.getOption('css')) {
+    if (buildHelpers.getFlagValue('css')) {
         let currentConfig = _getStylesConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -180,13 +180,13 @@ function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
  * @return {[Array]}     [description]
  */
 function initConfig(customConfigList, mergeStrategy) {
-    let scope = bornHelpers.getOption('css') ? 'styles' : 'js',
-        cartridgeList = bornHelpers.getCartridgeBuildList(scope),
+    let scope = buildHelpers.getFlagValue('css') ? 'styles' : 'js',
+        cartridgeList = buildHelpers.getCartridgeBuildList(scope),
         options = {
-            mainFiles: bornHelpers.getOption('mainFiles', 'main.js', scope).split(/(?:,| )+/),
-            getRootFiles: bornHelpers.getOption('rootFiles', false, scope),
-            mainEntryName: bornHelpers.getOption('mainEntryName', 'main', scope),
-            revolverPaths: bornHelpers.getRevolverPaths(scope)
+            mainFiles: buildHelpers.getConfigValue('mainFiles', 'main.js', scope).split(/(?:,| )+/),
+            getRootFiles: buildHelpers.getConfigValue('rootFiles', false, scope),
+            mainEntryName: buildHelpers.getConfigValue('mainEntryName', 'main', scope),
+            revolverPaths: buildHelpers.getRevolverPaths(scope)
         },
         configList = [];
 

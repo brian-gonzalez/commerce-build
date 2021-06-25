@@ -3,6 +3,7 @@ const glob = require('glob');
 const path = require('path');
 const minimist = require('minimist');
 
+const CURRENT_SITE_NAME = getFlagValue('site');
 const DEFAULTS = {
         mainDirName: 'client',
         locale: 'default',
@@ -18,15 +19,36 @@ const DEFAULTS = {
 const cwd = process.cwd();
 
 /**
- * Helper method to get an option value from either process.argv (--<PROPERTY>), package.json's "config" property, or passed through process.env (--env.<PROPERTY>).
- * @param  {[String]} optionName   [The desired option name to search for]
+ * Returns a configuration value passed through a runtime command.
+ * That is, a value which is exclusively present on either `process.argv` or `process.env` (i.e. `--env.<FLAG_NAME>=<FLAG_VALUE>`).
+ * @param  {[type]} flagName [description]
+ * @return {[type]}            [description]
+ */
+function getFlagValue(flagName, defaultValue) {
+    let parsedValue = minimist(process.argv)[flagName] || process.env[`npm_config_env_${flagName}`] || defaultValue;
+
+    return parsedValue === 'true' ? true : (parsedValue === 'false' ? false : parsedValue);
+}
+
+/**
+ * Returns a configuration value from either a runtime command or a package.json's `config` property.
+ * The main difference between this method and `getFlagValue()` is that `getConfigValue()` will also look into `npm_package_config`
+ * in addition to `process.argv` and `process.env`.
+ * @param  {[String]} configName [The desired configuration's name to lookup]
  * @param  {[Any]} defaultValue [A default value to return in case no option is found in package.json nor from a runtime command]
  * @return {[String | Boolean]}              [description]
  */
-function getOption(optionName, defaultValue, scope = 'js') {
-    let parsedOption = minimist(process.argv)[optionName] || process.env[`npm_config_env_${optionName}`] || process.env[`npm_package_config_${scope}_${optionName}`] || process.env[`npm_package_config_${optionName}`] || defaultValue;
+function getConfigValue(configName, defaultValue, scope = 'js', siteName) {
+    let currentSiteName = siteName || CURRENT_SITE_NAME;
+    let parsedValue = 
+        getFlagValue(configName) ||
+        process.env[`npm_package_config_sites_${currentSiteName}_${scope}_${configName}`] ||
+        process.env[`npm_package_config_sites_${currentSiteName}_${configName}`] ||
+        process.env[`npm_package_config_${scope}_${configName}`] ||
+        process.env[`npm_package_config_${configName}`] ||
+        defaultValue;
 
-    return parsedOption === 'true' ? true : (parsedOption === 'false' ? false : parsedOption);
+    return parsedValue === 'true' ? true : (parsedValue === 'false' ? false : parsedValue);
 }
 
 function _updatePathKey(path, key, value) {
@@ -37,8 +59,8 @@ function _updatePathKey(path, key, value) {
 
 function _getPathData(currentCartridge, scope = 'js') {
     let pathData = {
-            inputPath: getOption('inputPath', DEFAULTS[scope].inputPath, scope),
-            outputPath: getOption('outputPath', DEFAULTS[scope].outputPath, scope)
+            inputPath: getConfigValue('inputPath', DEFAULTS[scope].inputPath, scope),
+            outputPath: getConfigValue('outputPath', DEFAULTS[scope].outputPath, scope)
         };
 
     pathData.inputPath = _updatePathKey(pathData.inputPath, 'cartridge', currentCartridge);
@@ -54,10 +76,10 @@ function _getPathData(currentCartridge, scope = 'js') {
  */
 function getJSPaths(currentCartridge, options) {
     let pathData = _getPathData(currentCartridge),
-        revolverAllowBase = getOption('revolverBase', false),
+        revolverAllowBase = getConfigValue('revolverBase', false),
         revolverPaths = options.revolverPaths.paths,
         mainPaths = getMainPaths(pathData.inputPath, options.mainFiles),
-        revolverDisableList = getOption('revolverDisable', '').split(/(?:,| )+/);
+        revolverDisableList = getConfigValue('revolverDisable', '').split(/(?:,| )+/);
 
     pathData.entryObject = options.getRootFiles ? _getRootFiles(pathData) : {};
 
@@ -78,10 +100,10 @@ function getJSPaths(currentCartridge, options) {
 function getSCSSPaths(currentCartridge) {
     let pathData = _getPathData(currentCartridge, 'styles'),
         //Name of the container/main directory that hosts locales, which in turn host the files directory.
-        mainDirName = getOption('mainDirName', DEFAULTS.mainDirName, 'styles'),
+        mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, 'styles'),
         mainDirIndex = pathData.inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 2,
-        keepOriginalLocation = getOption('keepOriginalLocation', false, 'styles'),
-        useLocales = getOption('useLocales', true, 'styles');
+        keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'styles'),
+        useLocales = getConfigValue('useLocales', true, 'styles');
 
     pathData.entryObject = {};
 
@@ -123,7 +145,7 @@ function getMainPaths(inputPath, mainFiles) {
  */
 function getIncludePaths() {
     let includePaths = [path.resolve('cartridges'), path.resolve('node_modules')],
-        customPaths = getOption('includePaths', '', 'styles').split(/(?:,| )+/);
+        customPaths = getConfigValue('includePaths', '', 'styles').split(/(?:,| )+/);
 
     customPaths.forEach(function(currentPath) {
         let expandedPath = path.resolve(currentPath);
@@ -145,14 +167,14 @@ function getRevolverPaths(scope = 'js') {
         //Object literal with path name/alias (key) and path reference (value).
         //Used by webpack to resolve files from alternate sources.
         aliasObject = {},
-        revolverCartridgeString = getOption('revolverPath', '', scope),
+        revolverCartridgeString = getConfigValue('revolverPath', '', scope),
         revolverCartridgeArray = revolverCartridgeString ? revolverCartridgeString.split(/(?:,| )+/) : [],
-        mainDirName = getOption('mainDirName', DEFAULTS.mainDirName, scope),
-        useLocales = getOption('useLocales', true, scope),
+        mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, scope),
+        useLocales = getConfigValue('useLocales', true, scope),
         //Name of the directory that should be the alias target location.
         //This might be different than the `main` directory name, and might be positioned at a different location before or after a locale.
-        aliasDirName = getOption('aliasDirName', false, scope),
-        defaultLocale = useLocales ? getOption('defaultLocale', DEFAULTS.locale, scope) : false;
+        aliasDirName = getConfigValue('aliasDirName', false, scope),
+        defaultLocale = useLocales ? getConfigValue('defaultLocale', DEFAULTS.locale, scope) : false;
 
     revolverCartridgeArray.forEach(function(currentCartridge) {
         let cartridgeParts = currentCartridge.split('::'),
@@ -186,8 +208,8 @@ function getRevolverPaths(scope = 'js') {
  * @return {[type]}       [description]
  */
 function getCartridgeBuildList(scope = 'js') {
-    let originalCartridgeList = (getOption('cartridge', '', scope) || getOption('revolverPath', '', scope)).split(/(?:,| )+/),
-        buildDisableList = getOption('buildDisable', '', scope).split(/(?:,| )+/),
+    let originalCartridgeList = (getConfigValue('cartridge', '', scope) || getConfigValue('revolverPath', '', scope)).split(/(?:,| )+/),
+        buildDisableList = getConfigValue('buildDisable', '', scope).split(/(?:,| )+/),
         resultCartridgeList = [];
 
     originalCartridgeList.forEach(function(currentCartridge) {
@@ -290,12 +312,12 @@ function writeFile(outputFile, targetLocationName, fileType = 'css', result) {
 }
 
 /**
- * Recursively delete directories when the `--clean` flaf is present.
+ * Recursively delete directories when the `--clean` flag is present.
  * This is necessary to avoid pushing outdated files when a code deployment runs.
  * @param  {[type]} targetPath [description]
  */
 function cleanDirs(targetPath) {
-    if (getOption('clean', false)) {
+    if (getFlagValue('clean', false)) {
         fs.rm(targetPath, { recursive: true, force: true }, (err) => {
             if (err) {
                 throw err;
@@ -307,7 +329,8 @@ function cleanDirs(targetPath) {
 exports.logFile = logFile;
 exports.writeFile = writeFile;
 exports.ensureDirs = ensureDirs;
-exports.getOption = getOption;
+exports.getFlagValue = getFlagValue;
+exports.getConfigValue = getConfigValue;
 exports.getJSPaths = getJSPaths;
 exports.getSCSSPaths = getSCSSPaths;
 exports.getIncludePaths = getIncludePaths;
@@ -315,3 +338,6 @@ exports.getRevolverPaths = getRevolverPaths;
 exports.getCartridgeBuildList = getCartridgeBuildList;
 exports.defaultOptions = DEFAULTS;
 exports.cleanDirs = cleanDirs;
+
+//Here for backwards compatibility. Will be removed with the next major release:
+exports.getOption = getConfigValue;

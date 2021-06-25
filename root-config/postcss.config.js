@@ -1,6 +1,6 @@
-const bornHelpers = require('@borngroup/born-build').helpers;
+const buildHelpers = require('@bgss/CommerceBuild').helpers;
 
-let envType = bornHelpers.getOption('type', 'development'),
+let envType = buildHelpers.getConfigValue('type', 'development'),
     isProduction = envType === 'production';
 
 module.exports = {
