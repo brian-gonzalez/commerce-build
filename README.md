@@ -1,94 +1,79 @@
+## Build Options & Settings
 
+The build configurations are setup in the main config property of your `package.json` file. The following example showcases the minimum configurations you need, all other options are optional:
 
-# Commerce Build process with Revolver
-
-There are different scenarios covered by Revolver when working on a project with single or multiple store configurations. Revolver adapts to your setup depending on the parameters passed and which files are available.
-
-## Multiple stores configurations with either a main or independent store cartridge(s):
-
-Let’s say you have multiple stores and each has its own styles and own set of JS. To build the default store, all you need to run is:
-
-    npm run [task]
-
-To build a specific store or cartridge, run:
-
-    npm run [task] --env.cartridge=cartridge_name
-
-**Note: replace “`[task]`” with the task you want to run, such as `build` or `watch`.**  
-  
-  
-Now let's say you need your "main_cartridge" to leverage almost all of the JS functionality from your "base_cartridge". However, you'd like to modify a few files in your "main_cartridge" without having to copy all of the source code from "base_cartridge". You can achieve this by setting the `revolverPath` property on your package.json to follow the priority you need:
-
-    "scripts":  {
-        [...]
-    },
-    "config":  {
-        "cartridge": “main_cartridge”,
-        "js": {
-            "revolverPath": "main_cartridge, base_cartridge"
-        }
+	//Not using Revolver:
+	"config": {
+	    "rootFiles": true,
+	    "cartridges": "app_accelerator_core",
+	    "js": {
+		    "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
+	    },
+	    "styles": {
+		    "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
+		    "aliasDirName": "scss"
+	    }
     }
 
-Then simply run:
-
-    npm run [task]
-  
-  
-This also works if you need to build a specific cartridge. Your `revolverPath` needs to include the extra cartridge:
-    
-    "revolverPath": "cartridge_name, main_cartridge, base_cartridge"
-
-And then you can run:
-
-    npm run [task] --env.cartridge=cartridge_name
-  
-  
-You can override the `resolverPath` value at run time by passing it as a parameter:
-
-    npm run [task] --env.revolverPath=third_cartridge,fourth_cartridge
-
-You can run parallel builds by specifying a list of cartridges on the `cartridge` variable:
-
-    npm run [task] --env.cartridge=main_cartridge,second_cartridge,third_cartridge
-
-**Note: When running a command, use commas and no spaces between cartridge names. This is a limitation with Node.**  
-  
-Each cartridge must have at least one *app.js* file (inside the *js/* directories). Otherwise it means this cartridge is not meant to host built files, so the build will dump the files into the cartridge specified in `config.cartridge` instead.
-  
-  
-## Single store with single or multiple locales:
-
-Create a *style.scss* file inside the respective locale. If you have more than one locale, `@import` all the partials you need from the default or specific locale, then just replace those that are different for your current locale.
-
-Run:
-
-    npm run [task]
-
-This assumes you've setup a default cartridge and an optional set of styles.inputPath and styles.outputPath (defaults to `"cartridges/{cartridge}/cartridge/scss/**/*.scss"` and `"cartridges/{cartridge}/cartridge/static/{subDirectory}/css/{outputFile}.css"` respectively) on your *package.json*
-
-    "scripts":  {
-        [...]
-    },
-    "config":  {
-        "cartridge": “your_main_cartridge”,
-        "styles": {
-          "inputPath": "cartridges/{cartridge}/cartridge/scss/**/*.scss",
-          "outputPath": "cartridges/{cartridge}/cartridge/static/{subDirectory}/css/{outputFile}.css"
-        }
-    },
-    "devDependencies": {
-        [...]
+	//Using Revolver:
+    "config": {
+	    "rootFiles": true,
+	    "revolverPath": "plugin_instorepickup, plugin_giftcertificate, app_accelerator_core::core, app_storefront_base::base",
+	    "buildDisable": "app_storefront_base",
+	    "js": {
+		    "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
+	    },
+	    "styles": {
+		    "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
+		    "aliasDirName": "scss"
+	    }
     }
 
-### Styles object:
-|Property|Description|
-|--|--|
-|`inputPath`|(optional) is the input path to your *.scss* files. The string uses a combination of interpolation and glob's magic patterns to determine the exact file that needs to be parsed. This property accepts a dynamic value for the `{cartridge}`.|    
-|`outputPath`|(optional) is the output path of your built *.css* files. The string works similar to `styles.inputPath`, but in addition to having a `{cartridge}` dynamic value, you can also format your string using the `{subDirectory}` and `{outputFile}` values.|
+The `js` and the `styles` properties shown above accept any of the available **Build API** options. Use these to make configurations specifically for either JS or Style builds without affecting each other.
 
-### Styles object dynamic values:
-|Value|Description|
-|--|--|
-|`{cartridge}`|It's value gets replaced with the cartridge name being processed during build time. For example, if you pass `--env.cartridge=your_main_cartridge,your_second_cartridge`, then the value of `{cartridge}` will become each of the specified cartridges| 
-|`{subDirectory}`|It's value will be equal to the sub-directory found by the build when expanding the glob pattern in the  `styles.inputPath`, if any. For example, say your inputPath is `"cartridges/{cartridge}/cartridge/scss/**/*.scss"`, which then becomes `"cartridges/your_main_cartridge/cartridge/scss/en_US/main-styles.scss"`. In this example, the value of `{subDirectory}` will be "en_US". **Note:** Because CSS url references are relative to the file's location, built *.css* files will be placed in the specified output directory and will not carry their input sub-directory structure, other than the base `{subDirectory}`.|
-|`{outputFile}`|It's value will be equal to the file name found by the build when expanding the glob pattern in the  `styles.inputPath`, if any. For example, say your inputPath is `"cartridges/{cartridge}/cartridge/scss/**/*.scss"`, which then becomes `"cartridges/your_main_cartridge/cartridge/scss/en_US/main-styles.scss"`. In this example, the value of `{subDirectory}` will be "main-styles".|
+## Build API
+
+There are several options available for you to control how the build behaves.
+
+||||
+|--- |--- |--- |
+|**Property Name**|**Type**|**Description**|
+|rootFiles|Boolean|Default: true.Used for the JS build. Whether or not to parse and automatically build any JS files found at the root directory of the input path.This is necessary since SFRA expects files in that location to be built and placed into the equivalent /static directory.|
+|revolverPath|String|Default: plugin_instorepickup, plugin_giftcertificate, app_accelerator_core::core, app_storefront_base::baseSpecify one or more cartridges to use as a priority access and fallback system. Learn more about it in the “Understanding the revolverPath“ section of this page.|
+|buildDisable|String|Default: 'app_storefront_base'.Specify one or more cartridge names you wish to skip the build on.This is important if you want to keep cartridges available for access from other cartridges, however you do not want to build those cartridges directly for one reason or the other.|
+|inputPath|String|Default (JS): cartridges/{cartridge}/cartridge/client/default/jsDefault (Styles): cartridges/{cartridge}/cartridge/client/**/*.scssSpecify where your JS and CSS files are located.Usually both JS and CSS have different input paths, it is possible set separate configurations within the individual js and styles properties of the config object.|
+|outputPath|String|Default (JS):cartridges/{cartridge}/cartridge/static/default/jsDefault (Styles): cartridges/{cartridge}/cartridge/staticSpecify where you want your files to be compiled to after they’re finished building.Usually both JS and CSS have different output paths, it is possible set separate configurations within the individual js and styles properties of the config object.|
+|mainFiles|String|Default: 'main.js'.Specify one or more files to attach to your main entry object for Webpack.This option is largely unnecessary if you’re setting rootFiles:true.|
+|mainEntryName|String|Default: 'main'.Give a name to your main entry object for Webpack.This option is largely unnecessary if you’re setting rootFiles:true.|
+|mainDirName|String|Default: 'client'.Set the name of the directory that contains the general “client-side files”, i.e. “js”, “scss”, and the locales.|
+|aliasDirName|String|Default: 'scss'.Used for the Styles build only.Since Styles input paths can be more complex due to locale and subdirectory configurations, this property specified which is the “last directory before SCSS root”.|
+|keepOriginalLocation|Boolean|Default: false.Used for the Styles build only.SFRA is not sensitive about including static assets using relative paths within CSS (i.e. url(../path/to/file.png)).When this options is set to false AFX flattens the CSS file tree structure such that relative paths can be used reliably.|
+|useLocales|Boolean|Default: true.The build process can be used outside of SFRA.This flags allows working with file structures where there are no expected locale subdirectories.|
+|defaultLocale|String|Default: 'default'.Specify the main locale for your site. Usually this does not need to be changed.|
+|includePaths|String|Used for the Styles build only.Specify one or more additional paths to add to SCSS' includePaths setting.|
+|clean|Boolean|Default: false.Deletes JS/CSS found within the /static or output path directories before starting a build.|
+|js|Object|It is possible to use any of the properties described in this API within this object. This allows to set options specifically for the JS build so that it doesn’t affect the Styles build.For example, you may want to have separate inputPaths, or possibly even different revolverPaths entirely for your JS vs your Styles build."js": {  "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"}|
+|styles|Object|It is possible to use any of the properties described in this API within this object. This allows to set options specifically for the Styles build so that it doesn’t affect the JS build.For example, you may want to have separate inputPaths, or possibly even different revolverPaths entirely for your Styles vs your JS build."styles": {  "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",  "aliasDirName": "scss"}|
+
+
+## Understanding the revolverPath
+
+`revolverPath` provides an easy way to list your cartridges in the order in which they should inherit from each other. It also makes it so that it is possible to access files from one cartridge or the other using a simple syntax. If you’re familiar with SFCC’s Cartridge Path, then good news! This works exactly the same way.
+
+Given a revolverPath of the following structure:
+
+`plugin_instorepickup, plugin_giftcertificate, app_accelerator_core, app_storefront_base`
+
+We can interpret it the following way:
+-   The further to the left a cartridge appears in the path, the **higher up** in the chain they are.
+-   Conversely, the further to the right a cartridge is, the **lower down** the chain they are.
+
+Put differently, you can also look at the `revolverPath` as if they were stacking or overlaying each other:
+ 1. plugin_instorepickup
+ 2. plugin_giftcertificate
+ 3. app_accelerator_core::core
+ 4. app_storefront_base::base
+
+This distinction is very important, because the **order in which the cartridges are listed matters** for both Relative and Super imports.
+
+**Note:** Always remember to organize your revolverPath in the order you want your cartridges to overlay each other.
