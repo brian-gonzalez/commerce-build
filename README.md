@@ -6,7 +6,7 @@ The build is setup in the main `config` property of your `package.json` file. Th
 	//Not using Revolver:
 	"config": {
 	    "rootFiles": true,
-	    "cartridges": "app_accelerator_core",
+	    "cartridge": "app_accelerator_core",
 	    "js": {
 		    "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
 	    },
