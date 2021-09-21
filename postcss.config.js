@@ -1,4 +1,4 @@
-const buildHelpers = require('@bgss/CommerceBuild').helpers;
+const buildHelpers = require('./src/index').helpers;
 
 let envType = buildHelpers.getConfigValue('type', 'development'),
     isProduction = envType === 'production';

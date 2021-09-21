@@ -16,12 +16,14 @@
         "sourceType": "module"
     },
     "extends": [
-        "eslint:recommended",
-        "idiomatic"
+        "eslint:recommended"
     ],
     "rules": {
         //Switches to 4 spaces per tab. I think it's better for readability.
-        "indent": [2, 4],
+        "indent": [
+            2,
+            4
+        ],
         //We don't really need forced function names for anonymous functions.
         //ES6 evaluates the function and determines a name for it most of the time:
         //https://eslint.org/docs/rules/func-names#as-needed

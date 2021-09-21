@@ -1,18 +1,18 @@
-node_modules/
+.DS_Store
+.history
+.idea/
 
-# ignore compiled source files and maps
-**/app_storefront_base/cartridge/static/**/js
-**/app_storefront_base/cartridge/static/**/css
-**/app_accelerator_core/cartridge/static/**/js
-**/app_accelerator_core/cartridge/static/**/css
+# ignore compiled source files
+**/cartridge/static/
 
 coverage/
-npm-debug.log
-.idea/
 dw.json
-.DS_Store
+node_modules/
+npm-debug.log
 test/appium/webdriver/config.json
-.history
 
-#Webpack Stats
+# Webpack Stats
 stats.json
+
+# ignore base cartridges folder added for testing
+cartridges/
