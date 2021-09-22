@@ -1,4 +1,4 @@
-const build = require('./src/index').build;
+const build = require('./src').build;
 
 let customConfigList = [
     // {

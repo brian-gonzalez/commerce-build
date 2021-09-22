@@ -1,4 +1,4 @@
-const buildHelpers = require('./src/index').helpers;
+const buildHelpers = require('./src').helpers;
 
 let envType = buildHelpers.getConfigValue('type', 'development'),
     isProduction = envType === 'production';

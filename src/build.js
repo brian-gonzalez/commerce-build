@@ -44,7 +44,7 @@ function _getJSConfig(currentCartridge, options) {
             },
             plugins: [new ESLintPlugin()],
             resolve: {
-                plugins: (function(useRevolver) {
+                plugins: (function (useRevolver) {
                     let plugins = [];
 
                     if (useRevolver) {
@@ -63,10 +63,10 @@ function _getJSConfig(currentCartridge, options) {
                 splitChunks: {
                     minChunks: 2
                 }
-            },
-            externals: {
-                'jquery': 'jQuery'
             }
+            // externals: {
+            //     'jquery': 'jQuery'
+            // }
         };
     }
 }
@@ -89,31 +89,31 @@ function _getStylesConfig(currentCartridge, options) {
                 rules: [{
                     test: /\.scss$/,
                     use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            url: false,
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sourceMap: true,
-                            sassOptions: {
-                                includePaths: buildHelpers.getIncludePaths()
+                        {
+                            loader: MiniCssExtractPlugin.loader
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                url: false,
+                                sourceMap: true
                             }
-                        }
-                    }]
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        },
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sourceMap: true,
+                                sassOptions: {
+                                    includePaths: buildHelpers.getIncludePaths()
+                                }
+                            }
+                        }]
                 }]
             },
             resolve: {
@@ -121,8 +121,8 @@ function _getStylesConfig(currentCartridge, options) {
             },
             plugins: [
                 //Fixes: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/151
-                new FixStyleOnlyEntriesPlugin({silent: true}),
-                new MiniCssExtractPlugin({filename: '[name].css'})
+                new FixStyleOnlyEntriesPlugin({ silent: true }),
+                new MiniCssExtractPlugin({ filename: '[name].css' })
             ],
             stats: {
                 chunksSort: 'name',
@@ -165,8 +165,8 @@ function _setConfig(configList, options, currentCartridge) {
  * Matching properties are replaced.
  */
 function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
-    configList.forEach(function(curentConfig, index) {
-        customConfigList.forEach(function(currentCustomConfig) {
+    configList.forEach(function (curentConfig, index) {
+        customConfigList.forEach(function (currentCustomConfig) {
             if (curentConfig.name.indexOf(`${currentCustomConfig.name}`) !== -1) {
                 //See https://github.com/survivejs/webpack-merge#merging-with-strategies
                 configList[index] = webpackMerge.smartStrategy(mergeStrategy)(curentConfig, currentCustomConfig);
