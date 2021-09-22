@@ -1,6 +1,6 @@
 {
-  "name": "@bgss/CommerceBuild",
-  "description": "Build tool for storefronts",
+  "name": "commerce-build",
+  "description": "Build tool for Online Storefronts",
   "keywords": [
     "build",
     "tool",
@@ -15,11 +15,11 @@
     "magento",
     "e-commerce"
   ],
-  "version": "2.1.0",
+  "version": "1.0.0",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brian-gonzalez/CommerceBuild"
+    "url": "https://github.com/brian-gonzalez/commerce-build"
   },
   "dependencies": {
     "@babel/core": "^7.15.5",
