@@ -17,25 +17,5 @@
     },
     "extends": [
         "eslint:recommended"
-    ],
-    "rules": {
-        //Switches to 4 spaces per tab. I think it's better for readability.
-        "indent": [
-            2,
-            4
-        ],
-        //We don't really need forced function names for anonymous functions.
-        //ES6 evaluates the function and determines a name for it most of the time:
-        //https://eslint.org/docs/rules/func-names#as-needed
-        "func-names": 0,
-        //This is just annoying and kinda ugly.
-        "no-console": 0,
-        "space-in-parens": 0,
-        "object-curly-spacing": 0,
-        "computed-property-spacing": 0,
-        "no-inline-comments": 0,
-        "linebreak-style": 0,
-        "no-useless-escape": 0,
-        "no-prototype-builtins": 0
-    }
+    ]
 }
