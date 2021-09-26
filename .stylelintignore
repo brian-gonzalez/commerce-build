@@ -1,3 +1,15 @@
+**/*.js
+**/*.css
+
+# Ignore base SFCC Cartridge
+app_storefront_base/
+bm_app_storefront_base/
+cartridges/modules/
+
+*.bundle.*
+package.json
+
+# https://github.com/prettier/prettier/issues/8506
 # OS Specific
 ._*
 .DS_Store
