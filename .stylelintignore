@@ -41,6 +41,15 @@ npm-debug.log
 stats.json
 
 # SFRA
-cartridge/static/
+*.iml
+cartridges.zip
+demo_data_sfra
 dw.json
+mobilefirstdata/
+sitegenesisdata/
+storefrontdata/
+test/acceptance/report
 test/appium/webdriver/config.json
+test/integration/config.json
+
+cartridge/static/
