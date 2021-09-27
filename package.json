@@ -14,6 +14,16 @@
     "tool",
     "webpack"
   ],
+  "contributors": [
+    {
+      "name" : "Santana James",
+      "url" : "https://github.com/santanajames"
+    },
+    {
+      "name" : "Brian Gonzalez",
+      "url" : "https://github.com/brian-gonzalez"
+    }
+  ],
   "version": "1.0.0",
   "engines": {
     "node": ">=16.0.0"
@@ -98,5 +108,6 @@
       "includePaths": "node_modules/flag-icon-css/sass",
       "aliasDirName": "scss"
     }
-  }
+  },
+  "license": "MIT"
 }
