@@ -16,17 +16,17 @@
   ],
   "contributors": [
     {
-      "name" : "Santana James",
+      "name": "Santana James",
       "email": "santana.james@gmail.com",
-      "url" : "https://github.com/santanajames"
+      "url": "https://github.com/santanajames"
     },
     {
-      "name" : "Brian Gonzalez",
+      "name": "Brian Gonzalez",
       "email": "brian.gonzalezp@gmail.com",
-      "url" : "https://github.com/brian-gonzalez"
+      "url": "https://github.com/brian-gonzalez"
     }
   ],
-  "version": "2.1.0",
+  "version": "3.0.0",
   "engines": {
     "node": ">=16.0.0"
   },
