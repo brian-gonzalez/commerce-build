@@ -1,7 +1,11 @@
 # Ignore base SFCC Cartridge
 app_storefront_base/
 bm_app_storefront_base/
-cartridges/modules/
+modules/
+bc_*
+bm_*
+int_*
+plugin_*
 
 *.bundle.*
 package.json

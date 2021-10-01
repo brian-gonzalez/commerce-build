@@ -1,7 +1,6 @@
 {
   "cartridges/**/cartridge/client/**/*.{js,json,css}": [
-    "prettier --write",
-    "eslint --fix src/",
+    "eslint --fix",
     "git add"
   ]
 }

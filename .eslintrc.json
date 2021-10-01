@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "amd": true,
     "browser": true,
@@ -6,8 +7,11 @@
     "es6": true,
     "jquery": true
   },
-  "extends": ["airbnb-base", "prettier"],
+  "extends": ["airbnb-base"],
   "rules": {
-    "func-names": "off"
+    "func-names": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-unresolved": "off",
+    "no-underscore-dangle": "off"
   }
 }
