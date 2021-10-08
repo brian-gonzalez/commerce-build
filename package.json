@@ -60,6 +60,7 @@
     "lint-staged": "^11.2.0",
     "mini-css-extract-plugin": "^1.6.2",
     "minimist": "^1.2.5",
+    "node-sass": "^6.0.1",
     "postcss": "^8.3.9",
     "postcss-css-variables": "^0.18.0",
     "postcss-loader": "^4.3.0",
@@ -80,8 +81,7 @@
     "eslint-plugin-sitegenesis": "^1.0.0",
     "flag-icon-css": "^2.9.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.6.0",
-    "node-sass": "^6.0.1"
+    "jquery": "^3.6.0"
   },
   "scripts": {
     "build:isml": "isml-linter --build",
