@@ -100,7 +100,8 @@
     "watch:scss": "npm run build:scss -- --watch",
     "watch:isml": "echo \"ISML\"",
     "watch:js": "npm run build:js -- --watch",
-    "watch": "concurrently -n \"JS,SCSS,ISML\" -c \"#f0db4f.bold,#cd6799.bold,#f06529.bold\" \"npm:watch:js\" \"npm:watch:scss\" \"npm:watch:isml\""
+    "watch": "concurrently -n \"JS,SCSS,ISML\" -c \"#f0db4f.bold,#cd6799.bold,#f06529.bold\" \"npm:watch:js\" \"npm:watch:scss\" \"npm:watch:isml\"",
+    "prepare": "husky install"
   },
   "config": {
     "rootFiles": true,
