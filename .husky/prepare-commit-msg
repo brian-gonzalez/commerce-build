@@ -1,0 +1,19 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# The script below adds the branch name automatically to
+# every commit messages. The regular expression
+# below searches for JIRA issue key's. The issue key will
+# be extracted out of your branch name.
+
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+MSG_SEPARATOR=": "
+REGEX_ISSUE_ID="[a-zA-Z0-9,\.\_\-]+-[0-9]+"
+
+if [[ "${BRANCH_NAME}" =~ $REGEX_ISSUE_ID ]]; then
+  ISSUE_ID="${BASH_REMATCH[0]}"
+fi
+
+if [[ -n $ISSUE_ID ]]; then
+  sed -i.bak -e "1s/^/$ISSUE_ID$MSG_SEPARATOR/" $1
+fi
