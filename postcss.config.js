@@ -1,16 +1,16 @@
-const buildHelpers = require('./src').helpers;
+const { helpers } = require('./src');
 
-const envType = buildHelpers.getConfigValue('type', 'development');
+const envType = helpers.getConfigValue('type', 'development');
 const isProduction = envType === 'production';
 
 module.exports = {
-  plugins: {
-    autoprefixer: {},
-    cssnano: isProduction
-      ? {
-          mergeRules: true,
-          zindex: false,
-        }
-      : false,
-  },
+    plugins: {
+        autoprefixer: {},
+        cssnano: isProduction
+            ? {
+                mergeRules: true,
+                zindex: false,
+            }
+            : false,
+    },
 };

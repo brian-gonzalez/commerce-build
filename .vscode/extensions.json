@@ -3,29 +3,20 @@
   // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "christian-kohler.npm-intellisense",
-    "christian-kohler.path-intellisense",
-    "codezombiech.gitignore",
-    "CoenraadS.bracket-pair-colorizer-2",
+    "coenraads.bracket-pair-colorizer-2",
     "dbaeumer.vscode-eslint",
-    "dsznajder.es7-react-js-snippets",
     "eamodio.gitlens",
-    "ecmel.vscode-html-css",
     "EditorConfig.EditorConfig",
     "fabiowquixada.vscode-isml-linter",
-    "formulahendry.auto-close-tag",
-    "formulahendry.auto-rename-tag",
     "kamikillerto.vscode-colorize",
-    "mhutchie.git-graph",
     "mrmlnc.vscode-scss",
     "nhoizey.gremlins",
     "pikamachu.require-cartridge-resolve",
-    "ryu1kn.partial-diff",
     "SqrTT.prophet",
     "streetsidesoftware.code-spell-checker",
+    "stylelint.vscode-stylelint",
+    "usernamehw.errorlens",
     "vincaslt.highlight-matching-tag",
-    "vsls-contrib.gistfs",
-    "wix.vscode-import-cost"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

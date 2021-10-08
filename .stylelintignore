@@ -1,59 +1,27 @@
-**/*.js
-**/*.css
+*.js
+*.css
 
-# Ignore base SFCC Cartridge
-app_storefront_base/
-bm_app_storefront_base/
-modules/
+# SFRA Add-On Cartridges
 bc_*
 bm_*
 int_*
+lib_*
 plugin_*
 
-*.bundle.*
+# Add a negating pattern to include an external cartridge
+# !plugin_wishlists/
+
+# SFRA Base Cartridges
+app_storefront_base/
+bm_app_storefront_base/
+modules/
+
+# SFRA Build
+**/cartridge/static/
+coverage/
+doc/
+bin/
+codecept.conf.js
+
 package.json
 
-# https://github.com/prettier/prettier/issues/8506
-# OS Specific
-._*
-.DS_Store
-.DS_Store?
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE Specific
-.~lock.*
-.buildpath
-.idea
-.project
-.settings
-# Do not ignore. Needed to share settings.
-# .vscode
-
-# Project Specific
-.changelog
-.env
-.eslintcache
-.history
-*.log
-coverage/
-dist/
-node_modules/
-npm-debug.log
-stats.json
-
-# SFRA
-*.iml
-cartridges.zip
-demo_data_sfra
-dw.json
-mobilefirstdata/
-sitegenesisdata/
-storefrontdata/
-test/acceptance/report
-test/appium/webdriver/config.json
-test/integration/config.json
-
-cartridge/static/

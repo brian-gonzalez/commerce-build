@@ -7,7 +7,13 @@
     {
       "type": "prophet",
       "request": "launch",
-      "name": "SFCC"
+      "name": "SFCC",
+      "hostname": "<*.demandware.net (without https/http)>",
+      "username": "<username>",
+      "password": "<password>",
+      "codeversion": "<code-version>",
+      "cartridgeroot": "cartridges/",
+      "workspaceroot": "${workspaceFolder}"
     }
   ]
 }

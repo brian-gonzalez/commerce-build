@@ -1,3 +1,19 @@
+# SFRA
+cartridges/**/cartridge/static/**/css
+cartridges/**/cartridge/static/**/js
+cartridges/**/cartridge/static/**/fonts
+
+*.iml
+cartridges.zip
+demo_data_sfra
+dw.json
+mobilefirstdata/
+sitegenesisdata/
+storefrontdata/
+test/acceptance/report
+test/appium/webdriver/config.json
+test/integration/config.json
+
 # OS Specific
 ._*
 .DS_Store
@@ -27,18 +43,3 @@ dist/
 node_modules/
 npm-debug.log
 stats.json
-
-# SFRA
-*.iml
-cartridges.zip
-demo_data_sfra
-dw.json
-mobilefirstdata/
-sitegenesisdata/
-storefrontdata/
-test/acceptance/report
-test/appium/webdriver/config.json
-test/integration/config.json
-
-cartridges
-cartridge/static/
