@@ -1,4 +1,5 @@
 const { build } = require('./src');
+// const { build } = require('commerce-build'); // normal require
 
 // const customConfigList = [
 //     // {

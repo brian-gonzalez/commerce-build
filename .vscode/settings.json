@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
   "extension.prophet.htmlhint.enabled": false,
+  "javascript.validate.enable": false,
   "prettier.enable": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": true

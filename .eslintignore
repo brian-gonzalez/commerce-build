@@ -22,5 +22,7 @@ codecept.conf.js
 
 package.json
 
+# Module Build Only
 !./.*
 !*.config.*
+!bin/
