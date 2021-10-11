@@ -2,19 +2,20 @@
 
 const commander = require('commander');
 const { version, description } = require('../package.json');
-const { command } = require('./command');
 
 const program = new commander.Command();
 
+// To keep this file minimal, action handlers are moved to executableFile
+// command names are based on file names creating duplicates
+// since multiple files share the same functionality in ./command-handler.js
 program
     .version(version, '-v, --version', 'output the current version')
-    .description(description);
+    .description(description)
+    .command('build', 'build assets', { executableFile: 'build' })
+    .command('fix', 'fix lint errors', { executableFile: 'fix' })
+    .command('init', 'copy base config files to project root', { executableFile: 'init' })
+    .command('lint', 'lint project', { executableFile: 'lint' })
+    .command('watch', 'watch project for file changes', { executableFile: 'watch' })
+    .showSuggestionAfterError();
 
-program
-    .addArgument(new commander.Argument('<action>', 'Action to perform').choices(['build', 'fix', 'lint', 'watch']))
-    .option('--css', 'set scope to SCSS')
-    .option('--js', 'set scope to JS')
-    .option('--isml', 'set scope to ISML')
-    .action(command);
-
-program.parse();
+program.parse(process.argv);

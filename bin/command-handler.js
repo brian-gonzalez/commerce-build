@@ -1,8 +1,24 @@
+#!/usr/bin/env node
+
+const { Command } = require('commander');
 const { spawn } = require('cross-spawn');
 const { cosmiconfigSync } = require('cosmiconfig');
 
 const explorerSync = cosmiconfigSync('commercebuild');
 const { config } = explorerSync.search();
+
+const program = new Command();
+
+program
+    .option('--css', 'set scope to SCSS')
+    .option('--js', 'set scope to JS')
+    .option('--isml', 'set scope to ISML')
+    .showSuggestionAfterError();
+
+program.parse(process.argv);
+
+const { _name: cmd } = program;
+const cmdOptions = program.opts();
 
 const actions = {
     build: {
@@ -53,15 +69,14 @@ const scopeColors = [
 
 const isEmpty = (obj) => Object.keys(obj).length === 0;
 
-const command = (action, options) => {
+const commandHandler = (options, commandName) => {
     let childProcess;
-
     if (!isEmpty(options)) {
         scopes.forEach((scope) => {
             if (options[scope]) {
                 childProcess = spawn(
                     'npx',
-                    actions[action][scope],
+                    actions[commandName][scope],
                     { stdio: 'inherit' },
                 );
             }
@@ -72,7 +87,7 @@ const command = (action, options) => {
         const allCommand = ['concurrently', `-n=${labels}`, `-c=${colors}`];
 
         scopes.forEach((scope) => {
-            allCommand.push(actions[action][scope].join(' '));
+            allCommand.push(actions[commandName][scope].join(' '));
         });
 
         childProcess = spawn(
@@ -88,4 +103,4 @@ const command = (action, options) => {
     });
 };
 
-exports.command = command;
+commandHandler(cmdOptions, cmd);
