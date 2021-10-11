@@ -1,13 +1,13 @@
 module.exports = {
     'rootFiles': true,
-    'revolverPath': 'app_custom_theme::theme, app_storefront_base::base',
+    'cartridgePath': 'app_custom_theme::theme, app_storefront_base::base',
+    'aliases': {},
     'js': {
         'inputPath': 'cartridges/{cartridge}/cartridge/client/default/js',
     },
-    'styles': {
+    'scss': {
         'keepOriginalLocation': true,
         'inputPath': 'cartridges/{cartridge}/cartridge/client/**/*.scss',
         'includePaths': 'node_modules/flag-icon-css/sass',
-        'aliasDirName': 'scss',
     },
 };
