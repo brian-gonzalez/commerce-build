@@ -19,3 +19,4 @@ const { build } = require('./src');
 // };
 
 module.exports = build.initConfig();
+// module.exports = build.initConfig(customConfigList, mergeStrategy);
