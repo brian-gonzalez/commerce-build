@@ -1,12 +1,13 @@
 {
-  "editor.formatOnSave": true,
-  "extension.prophet.htmlhint.enabled": false,
-  "javascript.validate.enable": false,
-  "prettier.enable": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  },
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.formatOnSave": true,
+  "extension.prophet.htmlhint.enabled": false,
+  "extension.prophet.upload.enabled": true,
+  "javascript.validate.enable": false,
+  "prettier.enable": false
 }
