@@ -6,24 +6,22 @@ const RevolverPlugin = require('revolver-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 
-const buildHelpers = require('./helpers');
+const helpers = require('./helpers');
 
-const envType = process.env.NODE_ENV || 'development';
-const isProduction = envType === 'production';
 const cwd = process.cwd();
 
 function _getJSConfig(currentCartridge, options) {
-    const jsPathData = buildHelpers.getJSPaths(currentCartridge, options);
+    const jsPathData = helpers.getJSPaths(currentCartridge, options);
 
     // Only generate a config if there's an `jsPathData.entryObject`.
     if (Object.keys(jsPathData.entryObject).length) {
         const outputPath = path.join(cwd, jsPathData.outputPath);
 
         // This call should be removed once upgrading to Webpack 5.20+, since it comes with a built-in.
-        buildHelpers.cleanDirs(outputPath);
+        helpers.cleanDirs(outputPath);
 
         return {
-            mode: envType,
+            mode: helpers.envMode,
             entry: jsPathData.entryObject,
             name: `js-${currentCartridge}`,
             output: {
@@ -32,6 +30,7 @@ function _getJSConfig(currentCartridge, options) {
                 chunkFilename: '[name].js',
                 // clean: true
             },
+            devtool: !helpers.isProduction ? 'source-map' : false,
             module: {
                 rules: [
                     {
@@ -67,20 +66,20 @@ function _getJSConfig(currentCartridge, options) {
     }
 }
 
-function _getStylesConfig(currentCartridge, options) {
-    const scssPathData = buildHelpers.getSCSSPaths(currentCartridge, options);
+function _getSCSSConfig(currentCartridge, options) {
+    const scssPathData = helpers.getSCSSPaths(currentCartridge, options);
 
     // Only generate a config if there's an `scssPathData.entryObject`.
     if (Object.keys(scssPathData.entryObject).length) {
         return {
-            mode: envType,
+            mode: helpers.envMode,
             entry: scssPathData.entryObject,
             name: `scss-${currentCartridge}`,
             output: {
                 path: path.join(cwd, scssPathData.outputPath),
                 filename: '[name].js',
             },
-            devtool: !isProduction ? 'source-map' : '',
+            devtool: !helpers.isProduction ? 'source-map' : false,
             module: {
                 rules: [
                     {
@@ -108,7 +107,7 @@ function _getStylesConfig(currentCartridge, options) {
                                     sourceMap: true,
                                     sassOptions: {
                                         includePaths:
-                                            buildHelpers.getIncludePaths(),
+                                            helpers.getIncludePaths(),
                                     },
                                 },
                             },
@@ -144,7 +143,7 @@ function _getStylesConfig(currentCartridge, options) {
  */
 function _setConfig(configList, options, currentCartridge) {
     // Push back the new config into the configList.
-    if (buildHelpers.getFlagValue('js')) {
+    if (helpers.getFlagValue('js')) {
         const currentConfig = _getJSConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -152,8 +151,8 @@ function _setConfig(configList, options, currentCartridge) {
         }
     }
 
-    if (buildHelpers.getFlagValue('scss')) {
-        const currentConfig = _getStylesConfig(currentCartridge, options);
+    if (helpers.getFlagValue('scss')) {
+        const currentConfig = _getSCSSConfig(currentCartridge, options);
 
         if (currentConfig) {
             configList.push(currentConfig);
@@ -187,19 +186,19 @@ function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
  * @return {[Array]}     [description]
  */
 function initConfig(customConfigList, mergeStrategy) {
-    const scope = buildHelpers.getFlagValue('scss') ? 'scss' : 'js';
-    const cartridgeList = buildHelpers.getCartridgeBuildList(scope);
+    const scope = helpers.getFlagValue('scss') ? 'scss' : 'js';
+    const cartridgeList = helpers.getCartridgeBuildList(scope);
     const options = {
-        mainFiles: buildHelpers
+        mainFiles: helpers
             .getConfigValue('mainFiles', 'main.js', scope)
             .split(/(?:,| )+/),
-        getRootFiles: buildHelpers.getConfigValue('rootFiles', false, scope),
-        mainEntryName: buildHelpers.getConfigValue(
+        getRootFiles: helpers.getConfigValue('rootFiles', false, scope),
+        mainEntryName: helpers.getConfigValue(
             'mainEntryName',
             'main',
             scope,
         ),
-        revolverPaths: buildHelpers.getRevolverPaths(scope),
+        revolverPaths: helpers.getRevolverPaths(scope),
     };
     const configList = [];
 

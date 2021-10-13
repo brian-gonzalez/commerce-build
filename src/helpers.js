@@ -3,6 +3,10 @@ const glob = require('glob');
 const path = require('path');
 const minimist = require('minimist');
 
+const { envMode } = require('./env-mode');
+
+const isProduction = envMode === 'production';
+
 const CURRENT_SITE_NAME = getFlagValue('site');
 const DEFAULTS = {
     mainDirName: 'client',
@@ -88,7 +92,7 @@ function getJSPaths(currentCartridge, options) {
     }
 
     // This prevents a cartridge from resolving files from cartridges with higher priority (i.e. before the last on the list)
-    // This can be overriden by adding the desired cartridge to the `revolverDisable` option.
+    // This can be overridden by adding the desired cartridge to the `revolverDisable` option.
     if (options.revolverPaths.useRevolver && revolverDisableList.indexOf(currentCartridge) !== -1) {
         options.revolverPaths.useRevolver = false;
     }
@@ -110,7 +114,8 @@ function getSCSSPaths(currentCartridge) {
 
     glob.sync(pathData.inputPath, { ignore: '**/_*.scss' }).forEach((currentFile) => {
         let targetLocationName = currentFile.substring(mainDirIndex).replace(/.scss/g, '');
-        const localeName = targetLocationName.split('/')[0]; // IMPORANT NOTE: *DO NOT USE* `path.sep` here, as glob.sync() normalizes path separators on every OS to "/".
+        // IMPORTANT NOTE: *DO NOT USE* `path.sep` here, as glob.sync() normalizes path separators on every OS to "/".
+        const localeName = targetLocationName.split('/')[0];
         const localeIndex = targetLocationName.indexOf(`${localeName}/`) + localeName.length + 1;
         const finalPathPortion = keepOriginalLocation
             ? targetLocationName.substring(localeIndex)
@@ -277,7 +282,7 @@ function _getAliasPaths(aliasObject, currentCartridgePart, defaultInputPath, opt
 
 /**
  * Returns an object where key = file name, and value = file path.
- * This object is used to render the enty points on webpack.
+ * This object is used to render the entry points on webpack.
  * @param  {[type]} pathData [description]
  * @return {[type]}        [description]
  */
@@ -369,6 +374,8 @@ exports.getRevolverPaths = getRevolverPaths;
 exports.getCartridgeBuildList = getCartridgeBuildList;
 exports.defaultOptions = DEFAULTS;
 exports.cleanDirs = cleanDirs;
+exports.envMode = envMode;
+exports.isProduction = isProduction;
 
 // Here for backwards compatibility. Will be removed with the next major release:
 exports.getOption = getConfigValue;
