@@ -1,17 +1,11 @@
-const { helpers } = require('./src');
-// const { helpers } = require('commerce-build'); // normal require
-
-const envType = helpers.getConfigValue('type', 'development');
-const isProduction = envType === 'production';
+const { isProduction } = require('./src').helpers;
 
 module.exports = {
     plugins: {
-        autoprefixer: {},
-        cssnano: isProduction
-            ? {
-                mergeRules: true,
-                zindex: false,
-            }
-            : false,
+        'postcss-preset-env': {},
+        'cssnano': isProduction ? {
+            mergeRules: true,
+            zindex: false,
+        } : false,
     },
 };
