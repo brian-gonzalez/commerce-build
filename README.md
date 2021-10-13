@@ -14,12 +14,12 @@ showcases the minimum configurations needed, all other options are optional:
         "js": {
             "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
         },
-        "styles": {
+        "scss": {
             "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
             "aliasDirName": "scss"
         }
     }
-    
+
     //Using Revolver:
     "config": {
         "rootFiles": true,
@@ -28,7 +28,7 @@ showcases the minimum configurations needed, all other options are optional:
         "js": {
             "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
         },
-        "styles": {
+        "scss": {
             "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
             "aliasDirName": "scss"
         }
@@ -60,7 +60,7 @@ There are several options available for you to control how the build behaves.
 | includePaths         | String   | Used for the Styles build only. Specify one or more additional paths to add to SCSS' includePaths setting.                                                                                                                                                                                                                                                                                                                                   |
 | clean                | Boolean  | Default: `false`. Deletes JS and CSS files found within the `/static` or output directories before starting a build.                                                                                                                                                                                                                                                                                                                         |
 | js                   | Object   | It is possible to use any of the properties described in this API within this object. This allows to set options specifically for the JS build so that it doesn't affect the Styles build. For example, you may want to have separate inputPaths, or possibly even different revolverPaths entirely for your JS vs your Styles build. `"js": { "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"}`                           |
-| styles               | Object   | It is possible to use any of the properties described in this API within this object. This allows to set options specifically for the Styles build so that it doesn't affect the JS build.For example, you may want to have separate inputPaths, or possibly even different revolverPaths entirely for your Styles vs your JS build. `"styles": { "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss", "aliasDirName": "scss"}` |
+| styles               | Object   | It is possible to use any of the properties described in this API within this object. This allows to set options specifically for the Styles build so that it doesn't affect the JS build.For example, you may want to have separate inputPaths, or possibly even different revolverPaths entirely for your Styles vs your JS build. `"scss": { "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss", "aliasDirName": "scss"}` |
 
 ## Understanding the revolverPath
 

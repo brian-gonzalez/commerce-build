@@ -8,8 +8,7 @@ const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 
 const buildHelpers = require('./helpers');
 
-// Set to 'production' to disable mapping and enable minification:
-const envType = buildHelpers.getFlagValue('type', 'development');
+const envType = process.env.NODE_ENV || 'development';
 const isProduction = envType === 'production';
 const cwd = process.cwd();
 
@@ -153,7 +152,7 @@ function _setConfig(configList, options, currentCartridge) {
         }
     }
 
-    if (buildHelpers.getFlagValue('css')) {
+    if (buildHelpers.getFlagValue('scss')) {
         const currentConfig = _getStylesConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -188,7 +187,7 @@ function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
  * @return {[Array]}     [description]
  */
 function initConfig(customConfigList, mergeStrategy) {
-    const scope = buildHelpers.getFlagValue('css') ? 'styles' : 'js';
+    const scope = buildHelpers.getFlagValue('scss') ? 'scss' : 'js';
     const cartridgeList = buildHelpers.getCartridgeBuildList(scope);
     const options = {
         mainFiles: buildHelpers

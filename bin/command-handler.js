@@ -10,7 +10,7 @@ const { config } = explorerSync.search();
 const program = new Command();
 
 program
-    .option('--css', 'set scope to SCSS')
+    .option('--scss', 'set scope to SCSS')
     .option('--js', 'set scope to JS')
     .option('--isml', 'set scope to ISML')
     .showSuggestionAfterError();
@@ -23,19 +23,19 @@ const cmdOptions = program.opts();
 const actions = {
     build: {
         isml: ['isml-linter', '--build'],
-        css: ['webpack', '--css'],
+        scss: ['webpack', '--scss'],
         js: ['webpack', '--js'],
     },
     lint: {
         isml: ['isml-linter'],
-        css: ['stylelint', `${config.scss.inputPath}`, '--allow-empty-input'],
+        scss: ['stylelint', `${config.scss.inputPath}`, '--allow-empty-input'],
         js: ['eslint', `${config.js.inputPath}`, '--no-error-on-unmatched-pattern'],
     },
     fix: {
         get isml() {
             return actions.lint.isml.concat(['--autofix']);
         },
-        get css() {
+        get scss() {
             return actions.lint.css.concat(['--fix']);
         },
         get js() {
@@ -46,7 +46,7 @@ const actions = {
         get isml() {
             return actions.build.isml.concat(['--watch']);
         },
-        get css() {
+        get scss() {
             return actions.build.css.concat(['--watch']);
         },
         get js() {
@@ -57,7 +57,7 @@ const actions = {
 
 const scopes = [
     'isml',
-    'css',
+    'scss',
     'js',
 ];
 

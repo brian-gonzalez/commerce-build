@@ -90,17 +90,17 @@
   "scripts": {
     "build:isml": "commerce-build build --isml",
     "build:js": "commerce-build build --js",
-    "build:css": "commerce-build build --css",
+    "build:scss": "commerce-build build --scss",
     "build": "commerce-build build",
     "fix:isml": "commerce-build fix --isml",
     "fix:js": "commerce-build fix --js",
-    "fix:css": "commerce-build fix --css",
+    "fix:scss": "commerce-build fix --scss",
     "fix": "commerce-build fix",
     "lint:isml": "commerce-build lint --isml",
     "lint:js": "commerce-build lint --js",
-    "lint:css": "commerce-build lint --css",
+    "lint:scss": "commerce-build lint --scss",
     "lint": "commerce-build lint",
-    "watch:css": "commerce-build watch --css",
+    "watch:scss": "commerce-build watch --scss",
     "watch:isml": "commerce-build watch --isml",
     "watch:js": "commerce-build watch --js",
     "watch": "commerce-build watch",
@@ -113,7 +113,7 @@
     "js": {
       "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
     },
-    "styles": {
+    "scss": {
       "keepOriginalLocation": true,
       "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
       "includePaths": "node_modules/flag-icon-css/sass",

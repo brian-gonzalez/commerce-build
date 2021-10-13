@@ -11,7 +11,7 @@ const DEFAULTS = {
         inputPath: 'cartridges/{cartridge}/cartridge/js',
         outputPath: 'cartridges/{cartridge}/cartridge/static/default/js',
     },
-    styles: {
+    scss: {
         inputPath: 'cartridges/{cartridge}/cartridge/scss/**/*.scss',
         outputPath: 'cartridges/{cartridge}/cartridge/static',
     },
@@ -97,14 +97,14 @@ function getJSPaths(currentCartridge, options) {
 }
 
 function getSCSSPaths(currentCartridge) {
-    const pathData = _getPathData(currentCartridge, 'styles');
+    const pathData = _getPathData(currentCartridge, 'scss');
 
     // Name of the container/main directory that hosts locales,
     // which in turn host the files directory.
-    const mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, 'styles');
+    const mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, 'scss');
     const mainDirIndex = pathData.inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 2;
-    const keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'styles');
-    const useLocales = getConfigValue('useLocales', true, 'styles');
+    const keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'scss');
+    const useLocales = getConfigValue('useLocales', true, 'scss');
 
     pathData.entryObject = {};
 
@@ -150,7 +150,7 @@ function getMainPaths(inputPath, mainFiles) {
  */
 function getIncludePaths() {
     const includePaths = [path.resolve('cartridges'), path.resolve('node_modules')];
-    const customPaths = getConfigValue('includePaths', '', 'styles').split(/(?:,| )+/);
+    const customPaths = getConfigValue('includePaths', '', 'scss').split(/(?:,| )+/);
 
     customPaths.forEach((currentPath) => {
         const expandedPath = path.resolve(currentPath);
@@ -171,17 +171,16 @@ function getRevolverPaths(scope = 'js') {
     const revolverArray = [];
     // Object literal with path name/alias (key) and path reference (value).
     // Used by webpack to resolve files from alternate sources.
-    (aliasObject = {}),
-        (revolverCartridgeString = getConfigValue('revolverPath', '', scope)),
-        (revolverCartridgeArray = revolverCartridgeString
-            ? revolverCartridgeString.split(/(?:,| )+/)
-            : []),
-        (mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, scope)),
-        (useLocales = getConfigValue('useLocales', true, scope)),
-        // Name of the directory that should be the alias target location.
-        // This might be different than the `main` directory name, and might be positioned at a different location before or after a locale.
-        (aliasDirName = getConfigValue('aliasDirName', false, scope)),
-        (defaultLocale = useLocales ? getConfigValue('defaultLocale', DEFAULTS.locale, scope) : false);
+    const aliasObject = {};
+    const revolverCartridgeString = getConfigValue('revolverPath', '', scope);
+    const revolverCartridgeArray = revolverCartridgeString ? revolverCartridgeString.split(/(?:,| )+/) : [];
+    const mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, scope);
+    const useLocales = getConfigValue('useLocales', true, scope);
+    // Name of the directory that should be the alias target location.
+    // This might be different than the `main` directory name,
+    // and might be positioned at a different location before or after a locale.
+    const aliasDirName = getConfigValue('aliasDirName', false, scope);
+    const defaultLocale = useLocales ? getConfigValue('defaultLocale', DEFAULTS.locale, scope) : false;
 
     revolverCartridgeArray.forEach((currentCartridge) => {
         const cartridgeParts = currentCartridge.split('::');
@@ -191,15 +190,22 @@ function getRevolverPaths(scope = 'js') {
         const mainPath = defaultInputPath.substring(0, mainDirIndex);
 
         // Constructs a dynamic path if the provided `defaultInputPath` has blob-like patterns.
-        defaultInputPath = glob.hasMagic(defaultInputPath) ? _constructInputPath(mainPath, defaultLocale, aliasDirName) : defaultInputPath;
+        defaultInputPath = glob.hasMagic(defaultInputPath)
+            ? _constructInputPath(mainPath, defaultLocale, aliasDirName)
+            : defaultInputPath;
 
         // Build aliases based on the `cartridgeParts` Array.
-        cartridgeParts.forEach((currentCartridgePart) => _getAliasPaths(aliasObject, currentCartridgePart, defaultInputPath, {
-            useLocales,
-            mainPath,
-            mainDirIndex,
-            aliasDirName,
-        }));
+        cartridgeParts.forEach((currentCartridgePart) => _getAliasPaths(
+            aliasObject,
+            currentCartridgePart,
+            defaultInputPath,
+            {
+                useLocales,
+                mainPath,
+                mainDirIndex,
+                aliasDirName,
+            },
+        ));
 
         // Revolver paths do not currently work with locales.
         revolverArray.push({ name: cartridgeName, path: path.join(cwd, defaultInputPath) });
