@@ -3,7 +3,7 @@
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll.eslint": true
   },
   "editor.formatOnSave": true,
   "extension.prophet.htmlhint.enabled": false,
