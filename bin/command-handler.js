@@ -36,7 +36,7 @@ const actions = {
             return actions.lint.isml.concat(['--autofix']);
         },
         get scss() {
-            return actions.lint.css.concat(['--fix']);
+            return actions.lint.scss.concat(['--fix']);
         },
         get js() {
             return actions.lint.js.concat(['--fix']);
@@ -47,7 +47,7 @@ const actions = {
             return actions.build.isml.concat(['--watch']);
         },
         get scss() {
-            return actions.build.css.concat(['--watch']);
+            return actions.build.scss.concat(['--watch']);
         },
         get js() {
             return actions.build.js.concat(['--watch']);
