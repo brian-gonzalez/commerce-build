@@ -1,4 +1,4 @@
-const { build } = require('./src');
+const { initConfig } = require('./src').build;
 // const { build } = require('commerce-build'); // normal require
 
 // const customConfigList = [
@@ -18,5 +18,5 @@ const { build } = require('./src');
 //     module: 'replace',
 // };
 
-module.exports = build.initConfig();
-// module.exports = build.initConfig(customConfigList, mergeStrategy);
+module.exports = initConfig();
+// module.exports = initConfig(customConfigList, mergeStrategy);

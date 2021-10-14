@@ -39,6 +39,7 @@ Thumbs.db
 .history
 *.log
 coverage/
+dist/
 node_modules/
 npm-debug.log
 stats.json

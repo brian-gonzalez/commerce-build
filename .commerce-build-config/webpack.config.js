@@ -1,3 +1,3 @@
-const { build } = require('commerce-build');
+const { initConfig } = require('commerce-build').build;
 
-module.exports = build.initConfig();
+module.exports = initConfig();

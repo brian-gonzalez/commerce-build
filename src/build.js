@@ -30,7 +30,7 @@ function _getJSConfig(currentCartridge, options) {
                 chunkFilename: '[name].js',
                 // clean: true
             },
-            devtool: !helpers.isProduction ? 'source-map' : false,
+            devtool: !helpers.isProduction ? 'cheap-module-source-map' : false,
             module: {
                 rules: [
                     {
@@ -79,7 +79,7 @@ function _getSCSSConfig(currentCartridge, options) {
                 path: path.join(cwd, scssPathData.outputPath),
                 filename: '[name].js',
             },
-            devtool: !helpers.isProduction ? 'source-map' : false,
+            devtool: !helpers.isProduction ? 'cheap-module-source-map' : false,
             module: {
                 rules: [
                     {
