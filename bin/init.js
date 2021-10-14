@@ -16,7 +16,7 @@ program.parse(process.argv);
 
 async function copyFiles() {
     try {
-        await fs.copy(path.resolve(__dirname, '../dist/.commerce-build-config'), `${appRoot.get()}/.commerce-build-config`);
+        await fs.copy(path.resolve(__dirname, '../.commerce-build-config'), `${appRoot.get()}/.commerce-build-config`);
         console.log('commerce-config successfully copied!');
     } catch (err) {
         console.error(err);
