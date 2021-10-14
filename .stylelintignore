@@ -9,7 +9,7 @@ lib_*
 plugin_*
 
 # Add a negating pattern to include an external cartridge
-# !plugin_wishlists/
+!*_custom_*/
 
 # SFRA Base Cartridges
 app_storefront_base/

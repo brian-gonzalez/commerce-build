@@ -19,6 +19,8 @@ program.parse(process.argv);
 
 const { _name: cmd } = program;
 const cmdOptions = program.opts();
+const globSCSSPath = config.scss.inputPath.replace(/\{.*\}/, '**');
+const globJSPath = config.js.inputPath.replace(/\{.*\}/, '**');
 
 const actions = {
     build: {
@@ -28,8 +30,8 @@ const actions = {
     },
     lint: {
         isml: ['isml-linter'],
-        scss: ['stylelint', `${config.scss.inputPath}`, '--allow-empty-input'],
-        js: ['eslint', `${config.js.inputPath}`, '--no-error-on-unmatched-pattern'],
+        scss: ['stylelint', globSCSSPath, '--allow-empty-input'],
+        js: ['eslint', globJSPath, '--no-error-on-unmatched-pattern'],
     },
     fix: {
         get isml() {
