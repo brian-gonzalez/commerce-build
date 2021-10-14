@@ -359,6 +359,7 @@ function cleanDirs(targetPath) {
                 throw err;
             }
         });
+        console.log('Output path successfully cleaned!');
     }
 }
 

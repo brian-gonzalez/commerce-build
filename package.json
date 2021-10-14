@@ -108,7 +108,7 @@
   },
   "config": {
     "rootFiles": true,
-    "revolverPath": "app_custom_theme::theme, app_storefront_base::base",
+    "revolverPath": "app_custom_site::site, app_storefront_base::base",
     "buildDisable": "app_storefront_base",
     "js": {
       "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"

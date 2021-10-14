@@ -66,11 +66,18 @@ function _getJSConfig(currentCartridge, options) {
     }
 }
 
+// BUG: if no additional cartridges exist, SCSS build fails
+// steps: use default config files and have only app_storefront_base under cartridges
 function _getSCSSConfig(currentCartridge, options) {
     const scssPathData = helpers.getSCSSPaths(currentCartridge, options);
 
     // Only generate a config if there's an `scssPathData.entryObject`.
     if (Object.keys(scssPathData.entryObject).length) {
+        const outputPath = path.join(cwd, scssPathData.outputPath);
+
+        // This call should be removed once upgrading to Webpack 5.20+, since it comes with a built-in.
+        helpers.cleanDirs(outputPath);
+
         return {
             mode: helpers.envMode,
             entry: scssPathData.entryObject,
