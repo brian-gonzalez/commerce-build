@@ -23,8 +23,8 @@ const cmdOptions = program.opts();
 const actions = {
     build: {
         isml: ['isml-linter', '--build'],
-        scss: ['webpack', '--scss', '--clean'],
-        js: ['webpack', '--js', '--clean'],
+        scss: ['webpack', '--scss'],
+        js: ['webpack', '--js'],
     },
     lint: {
         isml: ['isml-linter'],
