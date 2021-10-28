@@ -52,6 +52,7 @@
     "cross-spawn": "^7.0.3",
     "css-loader": "^5.2.7",
     "cssnano": "^4.1.11",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
@@ -104,12 +105,12 @@
     "watch:isml": "commerce-build watch --isml",
     "watch:js": "commerce-build watch --js",
     "watch": "commerce-build watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "npm run lint && npm run fix && npm run build"
   },
   "config": {
     "rootFiles": true,
-    "revolverPath": "app_custom_site::site, app_storefront_base::base",
-    "buildDisable": "app_storefront_base",
+    "revolverPath": "app_custom_site::site",
     "js": {
       "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
     },

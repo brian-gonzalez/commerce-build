@@ -122,14 +122,32 @@ function _getSCSSConfig(currentCartridge, options) {
                     },
                 ],
             },
+            // resolve: {
+            //     alias: options.revolverPaths.aliases,
+            // },
             resolve: {
+                plugins: (function (useRevolver) {
+                    const plugins = [];
+
+                    if (useRevolver) {
+                        plugins.push(
+                            new RevolverPlugin({
+                                directoryList: options.revolverPaths.paths,
+                            }),
+                        );
+                    }
+
+                    return plugins;
+                }(options.revolverPaths.useRevolver)),
                 alias: options.revolverPaths.aliases,
             },
             plugins: [
                 // Fixes: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/151
                 new FixStyleOnlyEntriesPlugin({ silent: true }),
                 new MiniCssExtractPlugin({ filename: '[name].css' }),
-                new StylelintPlugin({}),
+                // BUG: If all files being built are ignored by stylelint, it will throw an error
+                // similar to --allow-empty-input
+                new StylelintPlugin(),
             ],
             stats: {
                 chunksSort: 'name',

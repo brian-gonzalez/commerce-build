@@ -1,15 +1,32 @@
 {
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true,
-    "source.fixAll.isml-linter": true
-  },
+  "stylelint.enable": true,
+  "css.validate": false,
+  "scss.validate": false,
   "editor.formatOnSave": true,
   "extension.prophet.htmlhint.enabled": false,
   "extension.prophet.upload.enabled": true,
   "javascript.validate.enable": false,
-  "prettier.enable": false
+  "prettier.enable": false,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    }
+  },
+  "[scss]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": true
+    },
+  },
+  "[isml]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.isml-linter": true
+    },
+  },
 }

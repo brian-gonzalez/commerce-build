@@ -1,12 +1,11 @@
-*.js
 *.css
 
 # SFRA Add-On Cartridges
-bc_*
-bm_*
-int_*
-lib_*
-plugin_*
+# bc_*
+# bm_*
+# int_*
+# lib_*
+# plugin_*
 
 # Add a negating pattern to include an external cartridge
 !*_custom_*/

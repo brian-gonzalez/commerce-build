@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const commander = require('commander');
+const { Command } = require('commander');
 const { version, description } = require('../package.json');
 
-const program = new commander.Command();
+const program = new Command();
 
 // To keep this file minimal, action handlers are moved to executableFile
 // command names are based on file names creating duplicates
