@@ -1,0 +1,26 @@
+{
+  "mainDirName": "client",
+  "mainEntryName": "main",
+  "useLocales": true,
+  "js": {
+    "inputPath": "cartridges/{cartridge}/cartridge/client/default/js",
+    "outputPath": "cartridges/{cartridge}/cartridge/static/default/js"
+  },
+  "scss": {
+    "aliasDirName": "scss",
+    "includePaths": "node_modules/flag-icon-css/sass",
+    "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
+    "keepOriginalLocation": true,
+    "outputPath": "cartridges/{cartridge}/cartridge/static"
+  },
+  "rootFiles": true,
+  "buildDisable": [],
+  "mainFiles": ["main.js"],
+  "revolverDisable": [],
+  "sites": [],
+  "scope": "js",
+  "cartridge": "",
+  "revolverPath": "",
+  "clean": false,
+  "defaultLocale": "default"
+}

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const path = require('path');
 const webpackMerge = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -122,23 +124,7 @@ function _getSCSSConfig(currentCartridge, options) {
                     },
                 ],
             },
-            // resolve: {
-            //     alias: options.revolverPaths.aliases,
-            // },
             resolve: {
-                plugins: (function (useRevolver) {
-                    const plugins = [];
-
-                    if (useRevolver) {
-                        plugins.push(
-                            new RevolverPlugin({
-                                directoryList: options.revolverPaths.paths,
-                            }),
-                        );
-                    }
-
-                    return plugins;
-                }(options.revolverPaths.useRevolver)),
                 alias: options.revolverPaths.aliases,
             },
             plugins: [
@@ -167,8 +153,10 @@ function _getSCSSConfig(currentCartridge, options) {
  * @param {[String]} currentCartridge  [description]
  */
 function _setConfig(configList, options, currentCartridge) {
+    const configScope = helpers.getConfigValue('scope');
+
     // Push back the new config into the configList.
-    if (helpers.getFlagValue('js')) {
+    if (configScope === 'js') {
         const currentConfig = _getJSConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -176,7 +164,7 @@ function _setConfig(configList, options, currentCartridge) {
         }
     }
 
-    if (helpers.getFlagValue('scss')) {
+    if (configScope === 'scss') {
         const currentConfig = _getSCSSConfig(currentCartridge, options);
 
         if (currentConfig) {
@@ -187,18 +175,18 @@ function _setConfig(configList, options, currentCartridge) {
 
 /**
  * Updates the build using a provided `customConfigList`.
- * This object is merged into the default build, `curentConfig`.
+ * This object is merged into the default build, `currentConfig`.
  * Matching properties are replaced.
  */
 function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
-    configList.forEach((curentConfig, index) => {
+    configList.forEach((currentConfig, index) => {
         customConfigList.forEach((currentCustomConfig) => {
             if (
-                curentConfig.name.indexOf(`${currentCustomConfig.name}`) !== -1
+                currentConfig.name.indexOf(`${currentCustomConfig.name}`) !== -1
             ) {
                 // See https://github.com/survivejs/webpack-merge#merging-with-strategies
                 configList[index] = webpackMerge.smartStrategy(mergeStrategy)(
-                    curentConfig,
+                    currentConfig,
                     currentCustomConfig,
                 );
             }
@@ -211,18 +199,13 @@ function _updateConfig(configList, customConfigList, mergeStrategy = {}) {
  * @return {[Array]}     [description]
  */
 function initConfig(customConfigList, mergeStrategy) {
-    const scope = helpers.getFlagValue('scss') ? 'scss' : 'js';
+    const scope = helpers.getConfigValue('scope');
+
     const cartridgeList = helpers.getCartridgeBuildList(scope);
     const options = {
-        mainFiles: helpers
-            .getConfigValue('mainFiles', 'main.js', scope)
-            .split(/(?:,| )+/),
-        getRootFiles: helpers.getConfigValue('rootFiles', false, scope),
-        mainEntryName: helpers.getConfigValue(
-            'mainEntryName',
-            'main',
-            scope,
-        ),
+        mainFiles: helpers.getConfigValue('mainFiles', '', scope),
+        getRootFiles: helpers.getConfigValue('rootFiles', '', scope),
+        mainEntryName: helpers.getConfigValue('mainEntryName', '', scope),
         revolverPaths: helpers.getRevolverPaths(scope),
     };
     const configList = [];

@@ -62,6 +62,7 @@
     "husky": "^7.0.2",
     "isml-linter": "^5.39.3",
     "lint-staged": "^11.2.0",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^1.6.2",
     "minimist": "^1.2.5",
     "node-sass": "^6.0.1",
@@ -107,19 +108,6 @@
     "watch": "commerce-build watch",
     "prepare": "husky install",
     "test": "npm run lint && npm run fix && npm run build"
-  },
-  "config": {
-    "rootFiles": true,
-    "revolverPath": "app_custom_site::site",
-    "js": {
-      "inputPath": "cartridges/{cartridge}/cartridge/client/default/js"
-    },
-    "scss": {
-      "keepOriginalLocation": true,
-      "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
-      "includePaths": "node_modules/flag-icon-css/sass",
-      "aliasDirName": "scss"
-    }
   },
   "license": "MIT"
 }

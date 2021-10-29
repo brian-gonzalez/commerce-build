@@ -1,55 +1,47 @@
 const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
-const minimist = require('minimist');
+
+const get = require('lodash/get');
 
 const { envMode } = require('./env-mode');
+const { config } = require('./config');
 
 const isProduction = envMode === 'production';
 
-const CURRENT_SITE_NAME = getFlagValue('site');
-const DEFAULTS = {
-    mainDirName: 'client',
-    locale: 'default',
-    js: {
-        inputPath: 'cartridges/{cartridge}/cartridge/js',
-        outputPath: 'cartridges/{cartridge}/cartridge/static/default/js',
-    },
-    scss: {
-        inputPath: 'cartridges/{cartridge}/cartridge/scss/**/*.scss',
-        outputPath: 'cartridges/{cartridge}/cartridge/static',
-    },
-};
 const cwd = process.cwd();
 
-/**
- * Returns a configuration value passed through a runtime command.
- * That is, a value which is exclusively present on either `process.argv` or `process.env` (i.e. `--env.<FLAG_NAME>=<FLAG_VALUE>`).
- * @param  {[type]} flagName [description]
- * @return {[type]}            [description]
- */
-function getFlagValue(flagName, defaultValue) {
-    const parsedValue = minimist(process.argv)[flagName] || process.env[`npm_config_env_${flagName}`] || defaultValue;
+function parseConfig(value) {
+    if (value === 'true') {
+        return true;
+    }
 
-    return parsedValue === 'true' ? true : parsedValue === 'false' ? false : parsedValue;
+    if (value === 'false') {
+        return false;
+    }
+
+    if (typeof value === 'string') {
+        return value.split(/(?:,| )+/);
+    }
+
+    return value;
 }
 
 /**
  * Returns a configuration value from either a runtime command or a package.json's `config` property.
- * The main difference between this method and `getFlagValue()` is that `getConfigValue()` will also look into `npm_package_config`
- * in addition to `process.argv` and `process.env`.
  * @param  {[String]} configName [The desired configuration's name to lookup]
  * @param  {[Any]} defaultValue [A default value to return in case no option is found in package.json nor from a runtime command]
  * @return {[String | Boolean]}              [description]
  */
-function getConfigValue(configName, defaultValue, scope = 'js', siteName) {
-    const currentSiteName = siteName || CURRENT_SITE_NAME;
-    const parsedValue = getFlagValue(configName)
-        || process.env[`npm_package_config_sites_${currentSiteName}_${scope}_${configName}`]
-        || process.env[`npm_package_config_sites_${currentSiteName}_${configName}`]
-        || process.env[`npm_package_config_${scope}_${configName}`]
-        || process.env[`npm_package_config_${configName}`]
-        || defaultValue;
+function getConfigValue(configName, defaultValue, scope, siteName) {
+    const currentSiteName = siteName || config.site;
+    const currentScope = config.scope;
+
+    // Retrieve hierarchial config value
+    const parsedValue = get(config, `sites.${currentSiteName}.${currentScope}.${configName}`)
+        || get(config, `sites.${currentSiteName}.${configName}`)
+        || get(config, `${currentScope}.${configName}`)
+        || config[configName];
 
     return parsedValue === 'true' ? true : parsedValue === 'false' ? false : parsedValue;
 }
@@ -60,10 +52,10 @@ function _updatePathKey(path, key, value) {
     return path.replace(updateRegEx, value);
 }
 
-function _getPathData(currentCartridge, scope = 'js') {
+function _getPathData(currentCartridge, scope) {
     const pathData = {
-        inputPath: getConfigValue('inputPath', DEFAULTS[scope].inputPath, scope),
-        outputPath: getConfigValue('outputPath', DEFAULTS[scope].outputPath, scope),
+        inputPath: getConfigValue('inputPath', '', scope),
+        outputPath: getConfigValue('outputPath', '', scope),
     };
 
     pathData.inputPath = _updatePathKey(pathData.inputPath, 'cartridge', currentCartridge);
@@ -79,10 +71,8 @@ function _getPathData(currentCartridge, scope = 'js') {
  */
 function getJSPaths(currentCartridge, options) {
     const pathData = _getPathData(currentCartridge);
-    const revolverAllowBase = getConfigValue('revolverBase', false);
-    const revolverPaths = options.revolverPaths.paths;
     const mainPaths = getMainPaths(pathData.inputPath, options.mainFiles);
-    const revolverDisableList = getConfigValue('revolverDisable', '').split(/(?:,| )+/);
+    const revolverDisableList = getConfigValue('revolverDisable', '');
 
     pathData.entryObject = options.getRootFiles ? _getRootFiles(pathData) : {};
 
@@ -105,7 +95,7 @@ function getSCSSPaths(currentCartridge) {
 
     // Name of the container/main directory that hosts locales,
     // which in turn host the files directory.
-    const mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, 'scss');
+    const mainDirName = getConfigValue('mainDirName', '', 'scss');
     const mainDirIndex = pathData.inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 2;
     const keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'scss');
     const useLocales = getConfigValue('useLocales', true, 'scss');
@@ -172,20 +162,20 @@ function getIncludePaths() {
  * Sets the RevolverPlugin paths into an array to be used when instantiating the plugin.
  * @return {[type]} [description]
  */
-function getRevolverPaths(scope = 'js') {
+function getRevolverPaths(scope) {
     const revolverArray = [];
     // Object literal with path name/alias (key) and path reference (value).
     // Used by webpack to resolve files from alternate sources.
     const aliasObject = {};
     const revolverCartridgeString = getConfigValue('revolverPath', '', scope);
     const revolverCartridgeArray = revolverCartridgeString ? revolverCartridgeString.split(/(?:,| )+/) : [];
-    const mainDirName = getConfigValue('mainDirName', DEFAULTS.mainDirName, scope);
+    const mainDirName = getConfigValue('mainDirName', '', scope);
     const useLocales = getConfigValue('useLocales', true, scope);
     // Name of the directory that should be the alias target location.
     // This might be different than the `main` directory name,
     // and might be positioned at a different location before or after a locale.
     const aliasDirName = getConfigValue('aliasDirName', false, scope);
-    const defaultLocale = useLocales ? getConfigValue('defaultLocale', DEFAULTS.locale, scope) : false;
+    const defaultLocale = useLocales ? getConfigValue('defaultLocale', '', scope) : false;
 
     revolverCartridgeArray.forEach((currentCartridge) => {
         const cartridgeParts = currentCartridge.split('::');
@@ -230,11 +220,12 @@ function getRevolverPaths(scope = 'js') {
  * @param  {String} scope [description]
  * @return {[type]}       [description]
  */
-function getCartridgeBuildList(scope = 'js') {
+function getCartridgeBuildList(scope) {
     const originalCartridgeList = (
         getConfigValue('cartridge', '', scope) || getConfigValue('revolverPath', '', scope)
     ).split(/(?:,| )+/);
-    const buildDisableList = getConfigValue('buildDisable', '', scope).split(/(?:,| )+/);
+
+    const buildDisableList = getConfigValue('buildDisable', '', scope);
     const resultCartridgeList = [];
 
     originalCartridgeList.forEach((currentCartridge) => {
@@ -353,7 +344,7 @@ function writeFile(outputFile, targetLocationName, fileType = 'css', result) {
  * @param  {[type]} targetPath [description]
  */
 function cleanDirs(targetPath) {
-    if (getFlagValue('clean', false)) {
+    if (getConfigValue('clean', false)) {
         fs.rm(targetPath, { recursive: true, force: true }, (err) => {
             if (err) {
                 throw err;
@@ -366,17 +357,12 @@ function cleanDirs(targetPath) {
 exports.logFile = logFile;
 exports.writeFile = writeFile;
 exports.ensureDirs = ensureDirs;
-exports.getFlagValue = getFlagValue;
 exports.getConfigValue = getConfigValue;
 exports.getJSPaths = getJSPaths;
 exports.getSCSSPaths = getSCSSPaths;
 exports.getIncludePaths = getIncludePaths;
 exports.getRevolverPaths = getRevolverPaths;
 exports.getCartridgeBuildList = getCartridgeBuildList;
-exports.defaultOptions = DEFAULTS;
 exports.cleanDirs = cleanDirs;
 exports.envMode = envMode;
 exports.isProduction = isProduction;
-
-// Here for backwards compatibility. Will be removed with the next major release:
-exports.getOption = getConfigValue;

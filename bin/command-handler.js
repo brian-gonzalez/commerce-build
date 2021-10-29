@@ -2,10 +2,6 @@
 
 const { Command } = require('commander');
 const { spawn } = require('cross-spawn');
-const { cosmiconfigSync } = require('cosmiconfig');
-
-const explorerSync = cosmiconfigSync('commercebuild');
-const { config } = explorerSync.search();
 
 const program = new Command();
 
@@ -19,6 +15,9 @@ program.parse(process.argv);
 
 const { _name: cmd } = program;
 const cmdOptions = program.opts();
+
+const { config } = require('../src/config');
+
 const globSCSSPath = config.scss.inputPath.replace(/\{.*\}/, '**');
 const globJSPath = config.js.inputPath.replace(/\{.*\}/, '**');
 
