@@ -8,19 +8,18 @@ module.exports = {
                 'ignoreAtRules': ['else'],
                 'except': ['blockless-after-same-name-blockless', 'first-nested'],
                 'ignore': ['after-comment'],
-            }
+            },
         ],
         'at-rule-no-unknown': null,
         'block-closing-brace-newline-after': [
             'always',
             {
-                'ignoreAtRules': ['if', 'else']
-            }
+                'ignoreAtRules': ['if', 'else'],
+            },
         ],
         'font-family-no-missing-generic-family-keyword': null,
         'indentation': 4,
         'no-descending-specificity': null,
-        'scss/at-else-empty-line-before': true,
         'scss/at-import-no-partial-leading-underscore': true,
         'scss/at-import-partial-extension-blacklist': ['scss'],
         'scss/at-rule-no-unknown': true,
@@ -36,7 +35,7 @@ module.exports = {
             true,
             {
                 'ignorePseudoClasses': ['focus-visible'],
-            }
-        ]
+            },
+        ],
     },
 };

@@ -1,8 +1,9 @@
 {
-  "stylelint.enable": true,
   "css.validate": false,
+  "less.validate": false,
   "scss.validate": false,
-  "editor.formatOnSave": true,
+  "stylelint.enable": true,
+  "editor.formatOnSave": false,
   "extension.prophet.htmlhint.enabled": false,
   "extension.prophet.upload.enabled": true,
   "javascript.validate.enable": false,

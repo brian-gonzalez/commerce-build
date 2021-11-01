@@ -10,5 +10,5 @@ coverage/
 package.json
 
 # Module Build Only
-!./.*
+!.*
 !*.config.*
