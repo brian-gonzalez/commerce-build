@@ -18,7 +18,7 @@ const envMode = process.env.NODE_ENV;
 const isProduction = envMode === 'production';
 
 /**
- * Returns a configuration value from either a runtime command or a package.json's `config` property.
+ * Returns a configuration value from either a runtime command or a package.json's `commercebuild` property.
  * @param  {[String]} configName [The desired configuration's name to lookup]
  * @param  {[Any]} defaultValue [A default value to return in case no option is found in package.json nor from a runtime command]
  * @return {[String | Boolean]}              [description]
