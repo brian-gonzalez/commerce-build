@@ -23,20 +23,19 @@ const isProduction = envMode === 'production';
  * @param  {[Any]} defaultValue [A default value to return in case no option is found in package.json nor from a runtime command]
  * @return {[String | Boolean]}              [description]
  */
-function getConfigValue(configName, scope, siteName) {
-    const currentSiteName = siteName || config.site;
-    const currentScope = config.scope;
+function getConfigValue(configName, scope) {
+    const currentSite = config.site;
 
     // Retrieve hierarchial config value
-    const parsedValue = get(config, `sites.${currentSiteName}.${currentScope}.${configName}`)
-        || get(config, `sites.${currentSiteName}.${configName}`)
-        || get(config, `${currentScope}.${configName}`)
+    const parsedValue = get(config, `sites.${currentSite}.${scope}.${configName}`)
+        || get(config, `sites.${currentSite}.${configName}`)
+        || get(config, `${scope}.${configName}`)
         || config[configName];
 
     return parsedValue === 'true' ? true : parsedValue === 'false' ? false : parsedValue;
 }
 
-function toArray(arr, configName) {
+function toArray(arr) {
     if (typeof arr === 'string') {
         return arr.split(/(?:,| )+/);
     }
@@ -68,21 +67,21 @@ function _getPathData(currentCartridge, scope) {
  * @return {[Object literal]}           [description]
  */
 function getJSPaths(currentCartridge, options) {
-    const pathData = _getPathData(currentCartridge);
+    const pathData = _getPathData(currentCartridge, 'js');
     const mainPaths = getMainPaths(pathData.inputPath, options.mainFiles);
-    const revolverDisableList = toArray(getConfigValue('revolverDisable'));
+    const revolverExcludeList = toArray(getConfigValue('revolverExclude'));
 
     pathData.entryObject = options.getRootFiles ? _getRootFiles(pathData) : {};
 
     // Only attach a `main` entry object if there are mathing files.
     if (mainPaths.length) {
-        pathData.entryObject[options.mainEntryName] = mainPaths;
+        pathData.entryObject[options.mainEntry] = mainPaths;
     }
 
     // This prevents a cartridge from resolving files from cartridges with higher priority (i.e. before the last on the list)
-    // This can be overridden by adding the desired cartridge to the `revolverDisable` option.
-    if (options.revolverPaths.useRevolver && revolverDisableList.indexOf(currentCartridge) !== -1) {
-        options.revolverPaths.useRevolver = false;
+    // This can be overridden by adding the desired cartridge to the `revolverExclude` option.
+    if (options.cartridgePaths.useRevolver && revolverExcludeList.indexOf(currentCartridge) !== -1) {
+        options.cartridgePaths.useRevolver = false;
     }
 
     return pathData;
@@ -93,10 +92,10 @@ function getSCSSPaths(currentCartridge) {
 
     // Name of the container/main directory that hosts locales,
     // which in turn host the files directory.
-    const mainDirName = getConfigValue('mainDirName', 'scss');
-    const mainDirIndex = pathData.inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 2;
-    const keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'scss');
-    const useLocales = getConfigValue('useLocales', true, 'scss');
+    const mainDir = getConfigValue('mainDir', 'scss');
+    const mainDirIndex = pathData.inputPath.indexOf(`/${mainDir}/`) + mainDir.length + 2;
+    const keepOriginalLocation = getConfigValue('keepOriginalLocation', 'scss');
+    const useLocales = getConfigValue('useLocales', 'scss');
 
     pathData.entryObject = {};
 
@@ -142,7 +141,11 @@ function getMainPaths(inputPath, mainFiles) {
  * Returns an Array with the list of includePaths for SCSS.
  */
 function getIncludePaths() {
-    const includePaths = [path.resolve('cartridges'), path.resolve('node_modules')];
+    const includePaths = [
+        path.resolve('cartridges'),
+        path.resolve('node_modules'),
+        path.resolve('node_modules/flag-icon-css/sass'), // fix for broken SFRA includes
+    ];
     const customPaths = toArray(getConfigValue('includePaths', 'scss'));
 
     customPaths.forEach((currentPath) => {
@@ -160,30 +163,30 @@ function getIncludePaths() {
  * Sets the RevolverPlugin paths into an array to be used when instantiating the plugin.
  * @return {[type]} [description]
  */
-function getRevolverPaths(scope) {
+function getCartridgePaths(scope) {
     const revolverArray = [];
     // Object literal with path name/alias (key) and path reference (value).
     // Used by webpack to resolve files from alternate sources.
     const aliasObject = {};
-    const revolverCartridges = toArray(getConfigValue('revolverPath', scope));
-    const mainDirName = getConfigValue('mainDirName', scope);
-    const useLocales = getConfigValue('useLocales', true, scope);
+    const revolverCartridges = toArray(getConfigValue('cartridgePath', scope));
+    const mainDir = getConfigValue('mainDir', scope);
+    const useLocales = getConfigValue('useLocales', scope);
     // Name of the directory that should be the alias target location.
     // This might be different than the `main` directory name,
     // and might be positioned at a different location before or after a locale.
-    const aliasDirName = getConfigValue('aliasDirName', false, scope);
+    const aliasDir = getConfigValue('aliasDir', scope);
     const defaultLocale = useLocales ? getConfigValue('defaultLocale', scope) : false;
 
     revolverCartridges.forEach((currentCartridge) => {
         const cartridgeParts = currentCartridge.split('~');
         const cartridgeName = cartridgeParts[0];
         let defaultInputPath = _getPathData(cartridgeName, scope).inputPath;
-        const mainDirIndex = defaultInputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 1;
+        const mainDirIndex = defaultInputPath.indexOf(`/${mainDir}/`) + mainDir.length + 1;
         const mainPath = defaultInputPath.substring(0, mainDirIndex);
 
         // Constructs a dynamic path if the provided `defaultInputPath` has blob-like patterns.
         defaultInputPath = glob.hasMagic(defaultInputPath)
-            ? _constructInputPath(mainPath, defaultLocale, aliasDirName)
+            ? _constructInputPath(mainPath, defaultLocale, aliasDir)
             : defaultInputPath;
 
         // Build aliases based on the `cartridgeParts` Array.
@@ -195,7 +198,7 @@ function getRevolverPaths(scope) {
                 useLocales,
                 mainPath,
                 mainDirIndex,
-                aliasDirName,
+                aliasDir,
             },
         ));
 
@@ -212,34 +215,34 @@ function getRevolverPaths(scope) {
 
 /**
  * Returns a clean Array of all the cartridges that should be built.
- * This method will look into a provided `cartridge` option, and if none is found then it will default to `revolverPath`.
+ * This method will look into a provided `cartridge` option, and if none is found then it will default to `cartridgePath`.
  * This fallback allows to simplify the setup by not need a dedicated `cartridge` option.
  * @param  {String} scope [description]
  * @return {[type]}       [description]
  */
 function getCartridgeBuildList(scope) {
-    const originalCartridgeList = toArray(getConfigValue('cartridge', scope) || getConfigValue('revolverPath', scope));
-    const buildDisableList = toArray(getConfigValue('buildDisable', scope));
-    const resultCartridgeList = [];
+    const cartridgeList = toArray(getConfigValue('cartridge', scope) || getConfigValue('cartridgePath', scope));
+    const excludeList = toArray(getConfigValue('exclude', scope));
+    const cartridgeBuildList = [];
 
-    originalCartridgeList.forEach((currentCartridge) => {
+    cartridgeList.forEach((currentCartridge) => {
         const cartridgeParts = currentCartridge.split('~');
 
-        // Skip cartridges that are present in the `buildDisable` option, as these should not be considered for a build.
-        if (buildDisableList.indexOf(cartridgeParts[0]) === -1) {
-            resultCartridgeList.push(cartridgeParts[0]);
+        // Skip cartridges that are present in the `exclude` option, as these should not be considered for a build.
+        if (excludeList.indexOf(cartridgeParts[0]) === -1) {
+            cartridgeBuildList.push(cartridgeParts[0]);
         }
     });
 
-    return resultCartridgeList;
+    return cartridgeBuildList;
 }
 
 /**
  * Builds an input path using the provided parameters.
  */
-function _constructInputPath(mainPath, currentLocale, aliasDirName) {
+function _constructInputPath(mainPath, currentLocale, aliasDir) {
     return (
-        mainPath + (currentLocale ? `/${currentLocale}` : '') + (aliasDirName ? `/${aliasDirName}` : '')
+        mainPath + (currentLocale ? `/${currentLocale}` : '') + (aliasDir ? `/${aliasDir}` : '')
     );
 }
 
@@ -255,7 +258,7 @@ function _getAliasPaths(aliasObject, currentCartridgePart, defaultInputPath, opt
             const localeInputPath = _constructInputPath(
                 options.mainPath,
                 currentLocale,
-                options.aliasDirName,
+                options.aliasDir,
             );
 
             aliasObject[`${currentCartridgePart}/${currentLocale}`] = path.join(cwd, localeInputPath);
@@ -355,7 +358,7 @@ exports.getConfigValue = getConfigValue;
 exports.getJSPaths = getJSPaths;
 exports.getSCSSPaths = getSCSSPaths;
 exports.getIncludePaths = getIncludePaths;
-exports.getRevolverPaths = getRevolverPaths;
+exports.getCartridgePaths = getCartridgePaths;
 exports.getCartridgeBuildList = getCartridgeBuildList;
 exports.cleanDirs = cleanDirs;
 exports.envMode = envMode;

@@ -1,26 +1,31 @@
 {
-  "mainDirName": "client",
-  "mainEntryName": "main",
-  "useLocales": true,
+  "cartridge": "",
+  "cartridgePath": [],
+  "clean": false,
+  "defaultLocale": "default",
+  "exclude": [],
   "js": {
     "inputPath": "cartridges/{cartridge}/cartridge/client/default/js",
     "outputPath": "cartridges/{cartridge}/cartridge/static/default/js"
   },
+  "mainDir": "client",
+  "mainEntry": "main",
+  "mainFiles": [
+    "main.js"
+  ],
+  "revolverExclude": [],
+  "rootFiles": true,
+  "scope": "js",
   "scss": {
-    "aliasDirName": "scss",
-    "includePaths": "node_modules/flag-icon-css/sass",
+    "aliasDir": "scss",
+    "includePaths": [
+      "node_modules/flag-icon-css/sass"
+    ],
     "inputPath": "cartridges/{cartridge}/cartridge/client/**/*.scss",
     "keepOriginalLocation": true,
     "outputPath": "cartridges/{cartridge}/cartridge/static"
   },
-  "rootFiles": true,
-  "buildDisable": "",
-  "mainFiles": "main.js",
-  "revolverDisable": "",
-  "sites": "",
-  "scope": "js",
-  "cartridge": "",
-  "revolverPath": "",
-  "clean": false,
-  "defaultLocale": "default"
+  "sites": {},
+  "site": "",
+  "useLocales": true
 }

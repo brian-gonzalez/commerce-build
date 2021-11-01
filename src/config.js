@@ -46,7 +46,7 @@ if (!pkgConfig) {
 const envConfig = envXmog(process.env, 'BUILD_').build;
 
 // 5. get build options passed via CLI
-// e.g. --build.cartridge="app_storefront_base" --build.revolverPath="app_custom_site,app_custom_base"
+// e.g. --build.cartridge="app_storefront_base" --build.cartridgePath="app_custom_site,app_custom_base"
 const cliArgs = minimist(process.argv.slice(2));
 
 // Overwrite build scope with option passed

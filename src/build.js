@@ -50,14 +50,14 @@ function _getJSConfig(currentCartridge, options) {
                     if (useRevolver) {
                         plugins.push(
                             new RevolverPlugin({
-                                directoryList: options.revolverPaths.paths,
+                                directoryList: options.cartridgePaths.paths,
                             }),
                         );
                     }
 
                     return plugins;
-                }(options.revolverPaths.useRevolver)),
-                alias: options.revolverPaths.aliases,
+                }(options.cartridgePaths.useRevolver)),
+                alias: options.cartridgePaths.aliases,
             },
             optimization: {
                 splitChunks: {
@@ -125,7 +125,7 @@ function _getSCSSConfig(currentCartridge, options) {
                 ],
             },
             resolve: {
-                alias: options.revolverPaths.aliases,
+                alias: options.cartridgePaths.aliases,
             },
             plugins: [
                 // Fixes: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/151
@@ -205,8 +205,8 @@ function initConfig(customConfigList, mergeStrategy) {
     const options = {
         mainFiles: helpers.toArray(helpers.getConfigValue('mainFiles', scope)),
         getRootFiles: helpers.getConfigValue('rootFiles', scope),
-        mainEntryName: helpers.getConfigValue('mainEntryName', scope),
-        revolverPaths: helpers.getRevolverPaths(scope),
+        mainEntry: helpers.getConfigValue('mainEntry', scope),
+        cartridgePaths: helpers.getCartridgePaths(scope),
     };
     const configList = [];
 

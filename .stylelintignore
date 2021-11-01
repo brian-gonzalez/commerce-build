@@ -8,7 +8,7 @@
 # plugin_*
 
 # Add a negating pattern to include an external cartridge
-!*_custom_*/
+# !**/*_custom_*
 
 # SFRA Base Cartridges
 app_storefront_base/
@@ -17,10 +17,3 @@ modules/
 
 # SFRA Build
 **/cartridge/static/
-coverage/
-doc/
-bin/
-codecept.conf.js
-
-package.json
-
