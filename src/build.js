@@ -203,9 +203,9 @@ function initConfig(customConfigList, mergeStrategy) {
 
     const cartridgeList = helpers.getCartridgeBuildList(scope);
     const options = {
-        mainFiles: helpers.getConfigValue('mainFiles', '', scope),
-        getRootFiles: helpers.getConfigValue('rootFiles', '', scope),
-        mainEntryName: helpers.getConfigValue('mainEntryName', '', scope),
+        mainFiles: helpers.toArray(helpers.getConfigValue('mainFiles', scope)),
+        getRootFiles: helpers.getConfigValue('rootFiles', scope),
+        mainEntryName: helpers.getConfigValue('mainEntryName', scope),
         revolverPaths: helpers.getRevolverPaths(scope),
     };
     const configList = [];

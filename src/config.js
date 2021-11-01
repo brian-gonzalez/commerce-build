@@ -10,7 +10,7 @@ const { envXmog } = require('./dontenv-xmog');
 const moduleName = 'commercebuild';
 
 // 1. get default config values
-const defaultConfig = require('./config/config.default.json');
+const defaultConfig = require('./config.default.json');
 
 // 2. If `commercebuild` exists in package.json, use it over config files
 // eslint-disable-next-line import/no-dynamic-require
@@ -40,24 +40,22 @@ if (!pkgConfig) {
 }
 
 // 4. get BUILD env variables
-// e.g. BUILD_CARTRIDGE=app_storefront_base
-let envConfig = {};
-
-// returns an object with keyFilter prop.
+// e.g. BUILD_cartridge=app_storefront_base
+// returns an object with filtered key.
 // i.e. envXmog(process.env, 'BUILD_') --> { build: {} }
-envConfig = envXmog(process.env, 'BUILD_').build;
+const envConfig = envXmog(process.env, 'BUILD_').build;
 
 // 5. get build options passed via CLI
-// e.g. --build.cartridge="app_storefront_base" --build.cartridgePath="app_custom_base"
+// e.g. --build.cartridge="app_storefront_base" --build.revolverPath="app_custom_site,app_custom_base"
 const cliArgs = minimist(process.argv.slice(2));
 
 // Overwrite build scope with option passed
+// default: {scope: "js"}
 if (cliArgs.scss) {
-    // Defaults to 'js'
     set(cliArgs, 'build.scope', 'scss');
 }
 
-// 6. merge configs in order of priority
+// 6. merge configs. Last in takes priority
 const config = merge(defaultConfig, pkgConfig, configFile, envConfig, cliArgs.build);
 
 module.exports = {

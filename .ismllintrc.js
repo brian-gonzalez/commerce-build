@@ -12,12 +12,9 @@ module.exports = {
     ],
     'rules': {
         'contextual-attrs': {},
-        'enforce-require': {},
+        // 'enforce-require': {},
         'leading-iscache': {},
         'leading-iscontent': {},
-        'max-depth': {
-            'value': 20,
-        },
         'no-deprecated-attrs': {},
         'no-git-conflict': {},
         'no-import-package': {},

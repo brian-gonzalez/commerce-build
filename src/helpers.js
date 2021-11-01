@@ -1,31 +1,21 @@
 const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
-
 const get = require('lodash/get');
 
-const { envMode } = require('./env-mode');
 const { config } = require('./config');
-
-const isProduction = envMode === 'production';
 
 const cwd = process.cwd();
 
-function parseConfig(value) {
-    if (value === 'true') {
-        return true;
-    }
-
-    if (value === 'false') {
-        return false;
-    }
-
-    if (typeof value === 'string') {
-        return value.split(/(?:,| )+/);
-    }
-
-    return value;
+// Set NODE_ENV to development if undefined
+// This helps with package that loads config based on NODE_ENV
+// i.e. autoprefixer uses production unless development is explicitly set
+if (process.env.NODE_ENV === undefined) {
+    process.env.NODE_ENV = 'development';
 }
+
+const envMode = process.env.NODE_ENV;
+const isProduction = envMode === 'production';
 
 /**
  * Returns a configuration value from either a runtime command or a package.json's `config` property.
@@ -33,7 +23,7 @@ function parseConfig(value) {
  * @param  {[Any]} defaultValue [A default value to return in case no option is found in package.json nor from a runtime command]
  * @return {[String | Boolean]}              [description]
  */
-function getConfigValue(configName, defaultValue, scope, siteName) {
+function getConfigValue(configName, scope, siteName) {
     const currentSiteName = siteName || config.site;
     const currentScope = config.scope;
 
@@ -46,6 +36,14 @@ function getConfigValue(configName, defaultValue, scope, siteName) {
     return parsedValue === 'true' ? true : parsedValue === 'false' ? false : parsedValue;
 }
 
+function toArray(arr, configName) {
+    if (typeof arr === 'string') {
+        return arr.split(/(?:,| )+/);
+    }
+
+    return arr;
+}
+
 function _updatePathKey(path, key, value) {
     const updateRegEx = new RegExp(`{${key}}`, 'g');
 
@@ -54,8 +52,8 @@ function _updatePathKey(path, key, value) {
 
 function _getPathData(currentCartridge, scope) {
     const pathData = {
-        inputPath: getConfigValue('inputPath', '', scope),
-        outputPath: getConfigValue('outputPath', '', scope),
+        inputPath: getConfigValue('inputPath', scope),
+        outputPath: getConfigValue('outputPath', scope),
     };
 
     pathData.inputPath = _updatePathKey(pathData.inputPath, 'cartridge', currentCartridge);
@@ -72,7 +70,7 @@ function _getPathData(currentCartridge, scope) {
 function getJSPaths(currentCartridge, options) {
     const pathData = _getPathData(currentCartridge);
     const mainPaths = getMainPaths(pathData.inputPath, options.mainFiles);
-    const revolverDisableList = getConfigValue('revolverDisable', '');
+    const revolverDisableList = toArray(getConfigValue('revolverDisable'));
 
     pathData.entryObject = options.getRootFiles ? _getRootFiles(pathData) : {};
 
@@ -95,7 +93,7 @@ function getSCSSPaths(currentCartridge) {
 
     // Name of the container/main directory that hosts locales,
     // which in turn host the files directory.
-    const mainDirName = getConfigValue('mainDirName', '', 'scss');
+    const mainDirName = getConfigValue('mainDirName', 'scss');
     const mainDirIndex = pathData.inputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 2;
     const keepOriginalLocation = getConfigValue('keepOriginalLocation', false, 'scss');
     const useLocales = getConfigValue('useLocales', true, 'scss');
@@ -145,7 +143,7 @@ function getMainPaths(inputPath, mainFiles) {
  */
 function getIncludePaths() {
     const includePaths = [path.resolve('cartridges'), path.resolve('node_modules')];
-    const customPaths = getConfigValue('includePaths', '', 'scss').split(/(?:,| )+/);
+    const customPaths = toArray(getConfigValue('includePaths', 'scss'));
 
     customPaths.forEach((currentPath) => {
         const expandedPath = path.resolve(currentPath);
@@ -167,18 +165,17 @@ function getRevolverPaths(scope) {
     // Object literal with path name/alias (key) and path reference (value).
     // Used by webpack to resolve files from alternate sources.
     const aliasObject = {};
-    const revolverCartridgeString = getConfigValue('revolverPath', '', scope);
-    const revolverCartridgeArray = revolverCartridgeString ? revolverCartridgeString.split(/(?:,| )+/) : [];
-    const mainDirName = getConfigValue('mainDirName', '', scope);
+    const revolverCartridges = toArray(getConfigValue('revolverPath', scope));
+    const mainDirName = getConfigValue('mainDirName', scope);
     const useLocales = getConfigValue('useLocales', true, scope);
     // Name of the directory that should be the alias target location.
     // This might be different than the `main` directory name,
     // and might be positioned at a different location before or after a locale.
     const aliasDirName = getConfigValue('aliasDirName', false, scope);
-    const defaultLocale = useLocales ? getConfigValue('defaultLocale', '', scope) : false;
+    const defaultLocale = useLocales ? getConfigValue('defaultLocale', scope) : false;
 
-    revolverCartridgeArray.forEach((currentCartridge) => {
-        const cartridgeParts = currentCartridge.split('::');
+    revolverCartridges.forEach((currentCartridge) => {
+        const cartridgeParts = currentCartridge.split('~');
         const cartridgeName = cartridgeParts[0];
         let defaultInputPath = _getPathData(cartridgeName, scope).inputPath;
         const mainDirIndex = defaultInputPath.indexOf(`/${mainDirName}/`) + mainDirName.length + 1;
@@ -221,15 +218,12 @@ function getRevolverPaths(scope) {
  * @return {[type]}       [description]
  */
 function getCartridgeBuildList(scope) {
-    const originalCartridgeList = (
-        getConfigValue('cartridge', '', scope) || getConfigValue('revolverPath', '', scope)
-    ).split(/(?:,| )+/);
-
-    const buildDisableList = getConfigValue('buildDisable', '', scope);
+    const originalCartridgeList = toArray(getConfigValue('cartridge', scope) || getConfigValue('revolverPath', scope));
+    const buildDisableList = toArray(getConfigValue('buildDisable', scope));
     const resultCartridgeList = [];
 
     originalCartridgeList.forEach((currentCartridge) => {
-        const cartridgeParts = currentCartridge.split('::');
+        const cartridgeParts = currentCartridge.split('~');
 
         // Skip cartridges that are present in the `buildDisable` option, as these should not be considered for a build.
         if (buildDisableList.indexOf(cartridgeParts[0]) === -1) {
@@ -366,3 +360,4 @@ exports.getCartridgeBuildList = getCartridgeBuildList;
 exports.cleanDirs = cleanDirs;
 exports.envMode = envMode;
 exports.isProduction = isProduction;
+exports.toArray = toArray;
