@@ -10,9 +10,7 @@ module.exports = {
     extends: ['airbnb-base'],
     rules: {
         'func-names': 'off',
-        'consistent-return': ['error', {
-            'treatUndefinedAsUnspecified': true,
-        }],
+        'consistent-return': 'off',
         'global-require': 'off',
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
         'import/no-unresolved': 'off',

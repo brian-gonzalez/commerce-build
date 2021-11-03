@@ -8,7 +8,7 @@ module.exports = {
         // 'plugin_',
         'app_storefront_base/',
         'bm_app_storefront_base/',
-        'modules/'
+        'modules/',
     ],
     'rules': {
         'contextual-attrs': {},
