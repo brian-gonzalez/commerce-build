@@ -1,10 +1,11 @@
 {
-  "cartridge": "",
+  "cartridge": [],
   "cartridgePath": [],
   "clean": false,
   "defaultLocale": "default",
   "exclude": [],
   "js": {
+    "aliasDir": "js",
     "inputPath": "cartridges/{cartridge}/cartridge/client/default/js",
     "outputPath": "cartridges/{cartridge}/cartridge/static/default/js"
   },

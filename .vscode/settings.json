@@ -5,7 +5,7 @@
   "stylelint.enable": true,
   "editor.formatOnSave": false,
   "extension.prophet.htmlhint.enabled": false,
-  "extension.prophet.upload.enabled": true,
+  // "extension.prophet.upload.enabled": true,
   "files.eol": "\n",
   "javascript.validate.enable": false,
   "prettier.enable": false,

@@ -1,4 +1,4 @@
-const setNestedKey = (obj, keyStr, value) => {
+function setNestedKey(obj, keyStr, value) {
     const keys = keyStr.split('_');
     const len = keys.length;
     let schema = obj; // a moving reference to internal objects within obj
@@ -13,9 +13,9 @@ const setNestedKey = (obj, keyStr, value) => {
 
     schema[keys[len - 1]] = value;
     return obj;
-};
+}
 
-const envXmog = (config, keyName) => {
+function envXmog(config, keyName) {
     const mogENV = {};
     const varRegex = new RegExp(`^${keyName}`);
 
@@ -28,7 +28,7 @@ const envXmog = (config, keyName) => {
     }
 
     return mogENV;
-};
+}
 
 module.exports = {
     envXmog,

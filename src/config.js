@@ -1,20 +1,19 @@
-// eslint-disable-next-line no-unused-vars
-const dotenv = require('dotenv').config();
-const appRoot = require('app-root-dir');
+require('dotenv').config();
 const minimist = require('minimist');
 const merge = require('lodash/merge');
 const set = require('lodash/set');
 
-const { envXmog } = require('./dontenv-xmog');
+const { appRoot } = require('./utils/app-root');
+const { envXmog } = require('./utils/dontenv-xmog');
 
 const moduleName = 'commercebuild';
 
 // 1. get default config values
-const defaultConfig = require('./config.default.json');
+const defaultConfig = require('./helpers/default-config.json');
 
 // 2. If `commercebuild` exists in package.json, use it over config files
 // eslint-disable-next-line import/no-dynamic-require
-const { commercebuild: pkgConfig } = require(`${appRoot.get()}/package.json`);
+const { commercebuild: pkgConfig } = require(`${appRoot}/package.json`);
 
 // 3. get config file if no package configuration exists
 let configFile = {};
@@ -26,11 +25,11 @@ if (!pkgConfig) {
         `${moduleName}.config.js`,
     ];
 
-    // loop configNames and attempt to load the file
     for (let i = 0; i < configNames.length; i++) {
         try {
             // eslint-disable-next-line import/no-dynamic-require
-            configFile = require(`${appRoot.get()}/${configNames[i]}`);
+            configFile = require(`${appRoot}/${configNames[i]}`);
+
             // if file is found and loaded, exit loop early
             break;
         } catch (err) {
@@ -58,6 +57,4 @@ if (cliArgs.scss) {
 // 6. merge configs. Last in takes priority
 const config = merge(defaultConfig, pkgConfig, configFile, envConfig, cliArgs.build);
 
-module.exports = {
-    config,
-};
+exports.config = config;

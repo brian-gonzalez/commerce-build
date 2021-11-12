@@ -1,11 +1,10 @@
 module.exports = {
     root: true,
     env: {
-        amd: true,
-        browser: true,
-        commonjs: true,
-        es6: true,
-        jquery: true,
+        node: true,
+    },
+    parserOptions: {
+        ecmaVersion: 2020,
     },
     extends: ['airbnb-base'],
     rules: {

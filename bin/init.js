@@ -1,22 +1,13 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
-const appRoot = require('app-root-dir');
-const { Command } = require('commander');
-
-const program = new Command();
-
-program
-    .option('--overwrite', 'set scope to SCSS')
-    .showSuggestionAfterError();
-
-program.parse(process.argv);
+// const appRoot = require('app-root-dir');
 
 async function copyFiles() {
     try {
-        await fs.copy(path.resolve(__dirname, '../.commerce-build-config'), `${appRoot.get()}/.commerce-build-config`);
+        await fs.copy(path.resolve(__dirname, '../.commerce-build-config'), `${appRoot}/.commerce-build-config`);
         console.log('commerce-config successfully copied!');
     } catch (err) {
         console.error(err);
