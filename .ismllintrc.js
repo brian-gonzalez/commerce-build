@@ -1,11 +1,11 @@
 module.exports = {
-    'rootDir': './cartridges',
-    'ignore': [
+    rootDir: './cartridges',
+    ignore: [
         'app_storefront_base/',
         'bm_app_storefront_base/',
         'modules/',
     ],
-    'rules': {
+    rules: {
         'contextual-attrs': {},
         'leading-iscache': {},
         'leading-iscontent': {},

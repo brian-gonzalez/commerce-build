@@ -1,3 +1,5 @@
+const webpackMerge = require('webpack-merge');
+
 /**
  * Updates the build using a provided `customConfigList`.
  * This object is merged into the default build, `currentConfig`.

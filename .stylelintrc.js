@@ -1,24 +1,24 @@
 module.exports = {
-    'plugins': ['stylelint-scss'],
-    'extends': 'stylelint-config-standard',
-    'rules': {
+    plugins: ['stylelint-scss'],
+    extends: 'stylelint-config-standard',
+    rules: {
         'at-rule-empty-line-before': [
             'always',
             {
-                'ignoreAtRules': ['else'],
-                'except': ['blockless-after-same-name-blockless', 'first-nested'],
-                'ignore': ['after-comment'],
+                ignoreAtRules: ['else'],
+                except: ['blockless-after-same-name-blockless', 'first-nested'],
+                ignore: ['after-comment'],
             },
         ],
         'at-rule-no-unknown': null,
         'block-closing-brace-newline-after': [
             'always',
             {
-                'ignoreAtRules': ['if', 'else'],
+                ignoreAtRules: ['if', 'else'],
             },
         ],
         'font-family-no-missing-generic-family-keyword': null,
-        'indentation': 4,
+        indentation: 4,
         'no-descending-specificity': null,
         'scss/at-import-no-partial-leading-underscore': true,
         'scss/at-import-partial-extension-blacklist': ['scss'],
@@ -34,7 +34,7 @@ module.exports = {
         'selector-pseudo-class-no-unknown': [
             true,
             {
-                'ignorePseudoClasses': ['focus-visible'],
+                ignorePseudoClasses: ['focus-visible'],
             },
         ],
     },

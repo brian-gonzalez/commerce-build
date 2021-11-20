@@ -1,36 +1,8 @@
-// const tglob = require('tiny-glob');
-// const glob = require('fast-glob');
 const glob = require('glob');
 const { join } = require('path');
 
 const { constructPath } = require('../utils/construct-path');
 
-// const buildAlias = async (aliasObject, currentCartridgePart, defaultInputPath, options) => {
-//     const files = await glob(`${options.mainPath}/*/`);
-//     const aliases = {};
-
-//     console.log(files);
-
-//     files.forEach((currentDir) => {
-//         const currentLocale = currentDir.substring(options.mainDirIndex).split('/')[1];
-//         const localeInputPath = constructPath(
-//             options.mainPath,
-//             currentLocale,
-//             options.aliasDir,
-//         );
-
-//         aliases[`${currentCartridgePart}/${currentLocale}`] = join(cwd, localeInputPath);
-//     });
-
-//     console.log(aliases);
-//     return aliases;
-// };
-
-/**
- * Generates full paths for each alias.
- * Each cartridge~alias pair will always point to the same path.
- * Returns a mutated `aliasObject` with the path data.
- */
 /**
  * Generates full paths for each alias.
  * Each cartridge~alias pair will always point to the same path.

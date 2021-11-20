@@ -12,7 +12,7 @@ const { toArray } = require('./utils/to-array');
  * @param {Object} mergeStrategy Strategy for merging webpack configurations
  * @return {Object} Returns final configuration object
  */
-function init(customConfig, mergeStrategy = {}) {
+function init(env, customConfig, mergeStrategy = {}) {
     const { config } = require('./config');
     const scope = getConfig(config, 'scope', false);
 
@@ -32,6 +32,5 @@ function init(customConfig, mergeStrategy = {}) {
 
     return configList;
 }
-// TODO: Remove init() call
-// init();
+
 exports.init = init;

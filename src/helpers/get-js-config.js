@@ -11,7 +11,6 @@ function getJSConfig(config, cartridgeName, scope, options) {
     // Only generate a config if there's an `jsPathData.entryObject`.
     if (Object.keys(jsPathData.entryObject).length) {
         const outputPath = join(cwd, jsPathData.outputPath);
-
         const namedConfig = {
             mode: envMode,
             entry: jsPathData.entryObject,
@@ -22,64 +21,58 @@ function getJSConfig(config, cartridgeName, scope, options) {
                 chunkFilename: '[name].js',
                 clean: true,
             },
-            devtool: !isProduction ? 'cheap-module-source-map' : false,
+            devtool: !isProduction ? 'source-map' : false,
             module: {
                 rules: [
                     {
                         test: /\.js$/,
-                        exclude: [/node_modules/],
-                        use: ['babel-loader'],
+                        exclude: [
+                            /[\\/]node_modules[\\/]/,
+                        ],
+                        use: {
+                            loader: 'babel-loader',
+                            options: {
+                                cacheDirectory: true,
+                                presets: [
+                                    '@babel/preset-env',
+                                ],
+                            },
+                        },
                     },
                 ],
             },
             plugins: [
                 new ESLintPlugin(),
-                // TODO: add common chunks
-                // plugins: [commonsPlugin]
-                // require.ensure or System.import
             ],
             resolve: {
-                plugins: (function (useRevolver) {
+                alias: options.cartridgePaths.aliases,
+                cacheWithContext: true,
+                plugins: ((useRevolver, paths) => {
                     const plugins = [];
 
                     if (useRevolver) {
                         plugins.push(
                             new RevolverPlugin({
-                                directoryList: options.cartridgePaths.paths,
+                                directoryList: paths,
                             }),
                         );
                     }
 
                     return plugins;
-                }(options.cartridgePaths.useRevolver)),
-                alias: options.cartridgePaths.aliases,
+                })(options.cartridgePaths.useRevolver, options.cartridgePaths.paths),
             },
             optimization: {
+                moduleIds: 'deterministic',
+                runtimeChunk: 'single',
                 splitChunks: {
-                    minChunks: 2,
+                    chunks: 'all',
+                    cacheGroups: {
+                        vendor: {
+                            test: /[\\/]node_modules[\\/]/,
+                            name: 'vendors',
+                        },
+                    },
                 },
-            },
-            // TODO: add dependencies
-            dependencies: [],
-            // infrastructureLogging: {
-            //     colors: false,
-            //     level: 'verbose',
-            // },
-            // TODO: test webpack stats from commerce-build cli
-            stats: {
-                colors: true,
-                // assets: false,
-                // modules: false,
-                // builtAt: false,
-                // version: false,
-                // preset: 'minimal',
-                // chunksSort: 'name',
-                // children: false,
-                // entrypoints: false,
-                // chunkOrigins: false,
-                // moduleTrace: true,
-                // errorDetails: true,
-                // modulesSort: 'size',
             },
             snapshot: {
                 managedPaths: [
@@ -100,13 +93,6 @@ function getJSConfig(config, cartridgeName, scope, options) {
                     hash: true,
                     timestamp: true,
                 },
-            },
-            performance: {
-                assetFilter(assetFilename) {
-                    return assetFilename.endsWith('.js');
-                },
-                hints: isProduction ? 'error' : 'warning',
-                maxAssetSize: 500000,
             },
         };
 

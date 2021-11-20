@@ -1,3 +1,5 @@
+// https://github.com/Francesco-Lanciana/Webpack-Template
+// https://github.com/webpack/enhanced-resolve
 const { init } = require('./src');
 
 const customConfig = false;
@@ -19,4 +21,5 @@ const mergeStrategy = {
     module: 'replace',
 };
 
-module.exports = init(customConfig, mergeStrategy);
+module.exports = (env) => init(env, customConfig, mergeStrategy);
+module.exports.parallelism = 4;
