@@ -1,25 +1,47 @@
-// https://github.com/Francesco-Lanciana/Webpack-Template
-// https://github.com/webpack/enhanced-resolve
 const { init } = require('./src');
 
-const customConfig = false;
-// [
-//     {
-//         name: 'js',
-//         module: {
-//             rules: [{
-//                 test: /\.js$/,
-//                 exclude: [/node_modules/],
-//                 use: ['babel-loader']
-//             }]
-//         }
-//     }
-// ];
+module.exports = (env, argv) => init(argv);
+
+/*
+// Use Babel for compiling over esbuild for better support es5
+// `$ npm i "@babel/core" "@babel/eslint-parser" "@babel/preset-env" "babel-loader"`
+const customConfig = [
+    {
+        name: 'js',
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    exclude: [
+                        /[\\/]node_modules[\\/]/,
+                    ],
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            cacheDirectory: true,
+                            presets: [
+                                '@babel/preset-env',
+                            ],
+                        },
+                    },
+                },
+            ],
+        },
+        optimization: {
+            minimizer: [],
+        },
+    },
+];
 
 // https://github.com/survivejs/webpack-merge#merging-with-strategies
 const mergeStrategy = {
-    module: 'replace',
+    module: {
+        rules: 'replace',
+    },
+    optimization: {
+        minimizer: 'replace',
+    },
 };
 
-module.exports = (env) => init(env, customConfig, mergeStrategy);
-module.exports.parallelism = 4;
+module.exports = (env, argv) => init(argv, customConfig, mergeStrategy);
+*/

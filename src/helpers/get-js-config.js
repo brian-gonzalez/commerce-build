@@ -1,10 +1,14 @@
 const ESLintPlugin = require('eslint-webpack-plugin');
 const RevolverPlugin = require('revolver-webpack-plugin');
+
 const { join, resolve } = require('path');
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
+
 const { getJSPaths } = require('./get-js-paths');
-const { envMode, isProduction } = require('../utils/env-mode');
 
 function getJSConfig(config, cartridgeName, scope, options) {
+    // process.env.NODE_ENV is set in config.js
+    const isProduction = process.env.NODE_ENV === 'production';
     const cwd = process.cwd();
     const jsPathData = getJSPaths(config, cartridgeName, scope, options);
 
@@ -12,7 +16,8 @@ function getJSConfig(config, cartridgeName, scope, options) {
     if (Object.keys(jsPathData.entryObject).length) {
         const outputPath = join(cwd, jsPathData.outputPath);
         const namedConfig = {
-            mode: envMode,
+            // If mode: is not provided via configuration or CLI, CLI will use any valid NODE_ENV value for mode.
+            devtool: isProduction ? false : 'source-map',
             entry: jsPathData.entryObject,
             name: `js-${cartridgeName}`,
             output: {
@@ -21,7 +26,6 @@ function getJSConfig(config, cartridgeName, scope, options) {
                 chunkFilename: '[name].js',
                 clean: true,
             },
-            devtool: !isProduction ? 'source-map' : false,
             module: {
                 rules: [
                     {
@@ -29,14 +33,9 @@ function getJSConfig(config, cartridgeName, scope, options) {
                         exclude: [
                             /[\\/]node_modules[\\/]/,
                         ],
-                        use: {
-                            loader: 'babel-loader',
-                            options: {
-                                cacheDirectory: true,
-                                presets: [
-                                    '@babel/preset-env',
-                                ],
-                            },
+                        loader: 'esbuild-loader',
+                        options: {
+                            target: 'es2015',
                         },
                     },
                 ],
@@ -62,6 +61,11 @@ function getJSConfig(config, cartridgeName, scope, options) {
                 })(options.cartridgePaths.useRevolver, options.cartridgePaths.paths),
             },
             optimization: {
+                minimizer: [
+                    new ESBuildMinifyPlugin({
+                        target: 'es2015',
+                    }),
+                ],
                 moduleIds: 'deterministic',
                 runtimeChunk: 'single',
                 splitChunks: {

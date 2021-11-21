@@ -1,4 +1,4 @@
-const webpackMerge = require('webpack-merge');
+const { mergeWithRules } = require('webpack-merge');
 
 /**
  * Updates the build using a provided `customConfigList`.
@@ -6,19 +6,21 @@ const webpackMerge = require('webpack-merge');
  * Matching properties are replaced.
  */
 function updateConfig(configList, customConfigList, mergeStrategy) {
+    const updatedConfig = [];
+
     configList.forEach((currentConfig, index) => {
         customConfigList.forEach((currentCustomConfig) => {
-            if (
-                currentConfig.name.indexOf(`${currentCustomConfig.name}`) !== -1
-            ) {
+            if (currentConfig.name.indexOf(`${currentCustomConfig.name}`) !== -1) {
                 // See https://github.com/survivejs/webpack-merge#merging-with-strategies
-                configList[index] = webpackMerge.smartStrategy(mergeStrategy)(
+                updatedConfig[index] = mergeWithRules(mergeStrategy)(
                     currentConfig,
                     currentCustomConfig,
                 );
             }
         });
     });
+
+    return updatedConfig;
 }
 
 exports.updateConfig = updateConfig;

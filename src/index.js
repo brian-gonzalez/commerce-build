@@ -4,18 +4,19 @@ const { getConfig } = require('./helpers/get-config');
 const { setConfig } = require('./helpers/set-config');
 const { updateConfig } = require('./helpers/update-config');
 const { toArray } = require('./utils/to-array');
+const { initConfig } = require('./config');
 
 /**
  * Initializes the config for project build
  *
+ * @param {Object} webpackEnv --env parsed cli args from Webpack
  * @param {Object} customConfig Custom configuration that can be merged into initial config
  * @param {Object} mergeStrategy Strategy for merging webpack configurations
  * @return {Object} Returns final configuration object
  */
-function init(env, customConfig, mergeStrategy = {}) {
-    const { config } = require('./config');
-    const scope = getConfig(config, 'scope', false);
-
+function init(webpackArgs, customConfig = false, mergeStrategy = {}) {
+    const config = initConfig(webpackArgs);
+    const scope = getConfig(config, 'scope');
     const options = {
         mainFiles: toArray(getConfig(config, 'mainFiles', scope)),
         getRootFiles: getConfig(config, 'rootFiles', scope),
@@ -24,10 +25,11 @@ function init(env, customConfig, mergeStrategy = {}) {
     };
 
     const cartridgeList = getCartridgeBuildList(config, scope);
-    const configList = setConfig(config, cartridgeList, scope, options);
+    let configList = setConfig(config, cartridgeList, scope, options);
 
+    // apply custom configuration
     if (customConfig) {
-        updateConfig(configList, customConfig, mergeStrategy);
+        configList = updateConfig(configList, customConfig, mergeStrategy);
     }
 
     return configList;
