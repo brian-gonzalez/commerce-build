@@ -1,8 +1,8 @@
 require('dotenv').config();
 // const minimist = require('minimist');
 const { merge } = require('webpack-merge');
-const { appRoot } = require('./utils/app-root');
-const { envXmog } = require('./utils/dontenv-xmog');
+const { appRoot } = require('../utils/app-root');
+const { envXmog } = require('../utils/dontenv-xmog');
 
 function initConfig(webpackArgs) {
     const moduleName = 'commercebuild';
@@ -14,7 +14,7 @@ function initConfig(webpackArgs) {
     process.env.NODE_ENV = process.env.NODE_ENV || webpackArgs.mode || 'development';
 
     // 1. get default config values
-    const defaultConfig = require('./helpers/default-config.json');
+    const defaultConfig = require('../config/commercebuildrc.default.json');
 
     // 2. If `commercebuild` exists in package.json, use it over config files
     // eslint-disable-next-line import/no-dynamic-require

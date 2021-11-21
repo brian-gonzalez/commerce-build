@@ -1,10 +1,10 @@
 const { getCartridgeBuildList } = require('./helpers/cartridge-build-list');
 const { getCartridgePaths } = require('./helpers/cartridge-paths');
 const { getConfig } = require('./helpers/get-config');
+const { initConfig } = require('./helpers/init-config');
 const { setConfig } = require('./helpers/set-config');
 const { updateConfig } = require('./helpers/update-config');
 const { toArray } = require('./utils/to-array');
-const { initConfig } = require('./config');
 
 /**
  * Initializes the config for project build
