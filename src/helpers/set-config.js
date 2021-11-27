@@ -1,4 +1,5 @@
 const { getJSConfig } = require('./get-js-config');
+const { getSCSSConfig } = require('./get-scss-config');
 
 function setConfig(config, cartridgeList, scope, options) {
     const configList = [];
@@ -13,13 +14,13 @@ function setConfig(config, cartridgeList, scope, options) {
             }
         }
 
-        // if (scope === 'scss') {
-        //     const scssConfig = _getSCSSConfig(cartridge, options);
+        if (scope === 'scss') {
+            const scssConfig = getSCSSConfig(config, cartridge, scope, options);
 
-        //     if (scssConfig) {
-        //         configList.push(scssConfig);
-        //     }
-        // }
+            if (scssConfig) {
+                configList.push(scssConfig);
+            }
+        }
     });
 
     return configList;

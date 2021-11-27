@@ -1,6 +1,5 @@
 const ESLintPlugin = require('eslint-webpack-plugin');
 const RevolverPlugin = require('revolver-webpack-plugin');
-
 const { join, resolve } = require('path');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
@@ -14,14 +13,13 @@ function getJSConfig(config, cartridgeName, scope, options) {
 
     // Only generate a config if there's an `jsPathData.entryObject`.
     if (Object.keys(jsPathData.entryObject).length) {
-        const outputPath = join(cwd, jsPathData.outputPath);
         const namedConfig = {
-            // If mode: is not provided via configuration or CLI, CLI will use any valid NODE_ENV value for mode.
+            // If [mode] is not provided via configuration or CLI, CLI will use any valid NODE_ENV value for mode.
             devtool: isProduction ? false : 'source-map',
             entry: jsPathData.entryObject,
             name: `js-${cartridgeName}`,
             output: {
-                path: outputPath,
+                path: join(cwd, jsPathData.outputPath),
                 filename: '[name].js',
                 chunkFilename: '[name].js',
                 clean: true,

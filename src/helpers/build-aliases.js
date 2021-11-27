@@ -1,4 +1,4 @@
-const glob = require('glob');
+const glob = require('fast-glob');
 const { join } = require('path');
 
 const { constructPath } = require('../utils/construct-path');
@@ -18,9 +18,7 @@ function buildAliases(cartridgeParts, inputPath, options) {
 
     cartridgeParts.forEach((part) => {
         if (options.useLocales) {
-            // add '/*' to select the folders one level down.
-            // this is where the locale folders live
-            const locales = glob.sync(`${options.mainPath}/*`);
+            const locales = glob.sync(`${options.mainPath}/*`, { onlyDirectories: true });
 
             locales.forEach((currentDir) => {
                 const currentLocale = currentDir.substring(options.mainDirIndex).split('/')[1];

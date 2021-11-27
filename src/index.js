@@ -1,3 +1,4 @@
+const { bundleBaseFonts } = require('./helpers/bundle-base-fonts');
 const { getCartridgeBuildList } = require('./helpers/cartridge-build-list');
 const { getCartridgePaths } = require('./helpers/cartridge-paths');
 const { getConfig } = require('./helpers/get-config');
@@ -30,6 +31,12 @@ function init(webpackArgs, customConfig = false, mergeStrategy = {}) {
     // apply custom configuration
     if (customConfig) {
         configList = updateConfig(configList, customConfig, mergeStrategy);
+    }
+
+    // copy fonts used in sfra OOTB styles
+    // replacement for SFRA's "compile:fonts" script
+    if (configList.bundleBaseFonts === true) {
+        bundleBaseFonts();
     }
 
     return configList;

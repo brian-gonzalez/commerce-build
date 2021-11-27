@@ -2,17 +2,17 @@
   "name": "commerce-build",
   "description": "Build tools for Salesforce Storefront Reference Architecture",
   "keywords": [
+    "sfra",
+    "sfcc",
+    "demandware",
+    "storefront",
+    "webpack",
     "build",
     "compile",
-    "demandware",
     "e-commerce",
     "js",
     "scss",
-    "sfcc",
-    "sfra",
-    "storefront",
-    "tool",
-    "webpack"
+    "tool"
   ],
   "contributors": [
     {
@@ -37,25 +37,22 @@
     "url": "https://github.com/brian-gonzalez/commerce-build"
   },
   "dependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "^7.16.3",
-    "@babel/preset-env": "^7.16.4",
-    "babel-loader": "^8.2.3",
-    "commander": "^8.3.0",
-    "cross-spawn": "^7.0.3",
+    "css-loader": "^6.5.1",
     "dotenv": "^10.0.0",
     "esbuild-loader": "^2.16.0",
-    "eslint": "^8.2.0",
+    "eslint": "^8.3.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-webpack-plugin": "^3.1.1",
     "fast-glob": "^3.2.7",
-    "glob": "^7.2.0",
     "mini-css-extract-plugin": "^2.4.5",
-    "minimist": "^1.2.5",
+    "postcss-loader": "^6.2.1",
+    "postcss-preset-env": "^7.0.1",
     "revolver-webpack-plugin": "^1.0.4",
-    "tiny-glob": "^0.2.9",
-    "webpack": "^5.64.1",
+    "sass": "^1.43.5",
+    "sass-loader": "^12.3.0",
+    "webpack": "^5.64.4",
     "webpack-cli": "^4.9.1",
+    "webpack-fix-style-only-entries": "^0.6.1",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {
@@ -68,7 +65,7 @@
   },
   "scripts": {
     "build:isml": "commerce-build build --isml",
-    "build:js": "commerce-build build --js",
+    "build:js": "webpack --js",
     "build:scss": "commerce-build build --scss",
     "build": "commerce-build build",
     "fix:isml": "commerce-build fix --isml",

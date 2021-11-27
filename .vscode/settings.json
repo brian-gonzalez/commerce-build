@@ -3,7 +3,7 @@
   "less.validate": false,
   "scss.validate": false,
   "stylelint.enable": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "extension.prophet.htmlhint.enabled": false,
   // "extension.prophet.upload.enabled": true,
   "files.eol": "\n",
