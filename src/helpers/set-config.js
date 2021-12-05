@@ -4,8 +4,9 @@ const { getSCSSConfig } = require('./get-scss-config');
 function setConfig(config, cartridgeList, scope, options) {
     const configList = [];
 
+    // Create a config object for each cartridge
+    // This will allow extending the settings via webpack-merge
     cartridgeList.forEach((cartridge) => {
-        // Push back the new config into the configList.
         if (scope === 'js') {
             const jsConfig = getJSConfig(config, cartridge, scope, options);
 
