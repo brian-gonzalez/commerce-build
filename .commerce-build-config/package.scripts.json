@@ -16,6 +16,7 @@
     "watch:isml": "commerce-build watch --isml",
     "watch:js": "commerce-build watch --js",
     "watch": "commerce-build watch",
-    "prepare": "husky install"
+    "prod": "commerce-build build production",
+    "test:build": "npm run fix && npm run build"
   }
 }

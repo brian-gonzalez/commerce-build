@@ -1,23 +1,14 @@
 module.exports = {
-    'rootDir': './cartridges',
-    // TODO: Modify ignore:[] paths per project
-    'ignore': [
-        'bm_',
-        'int_',
-        'lib_',
-        'plugin_',
+    rootDir: './cartridges',
+    ignore: [
         'app_storefront_base/',
         'bm_app_storefront_base/',
-        'modules/'
+        'modules/',
     ],
-    'rules': {
+    rules: {
         'contextual-attrs': {},
-        'enforce-require': {},
         'leading-iscache': {},
         'leading-iscontent': {},
-        'max-depth': {
-            'value': 15,
-        },
         'no-deprecated-attrs': {},
         'no-git-conflict': {},
         'no-import-package': {},

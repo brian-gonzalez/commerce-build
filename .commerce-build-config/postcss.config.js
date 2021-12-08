@@ -1,11 +1,6 @@
-const { isProduction } = require('commerce-build').helpers;
-
 module.exports = {
+    syntax: 'postcss-scss',
     plugins: {
         'postcss-preset-env': {},
-        'cssnano': isProduction ? {
-            mergeRules: true,
-            zindex: false,
-        } : false,
     },
 };

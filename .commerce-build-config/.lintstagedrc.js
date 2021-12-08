@@ -1,11 +1,11 @@
 module.exports = {
     'cartridges/**/cartridge/client/**/*.{js,json}': [
-        'eslint --fix'
+        'eslint --fix',
     ],
     'cartridges/**/cartridge/client/**/*.scss': [
-        'stylelint --fix'
+        'stylelint --fix',
     ],
     'cartridges/**/cartridge/client/**/*.isml': [
-        'isml-lint --autofix'
-    ]
+        'isml-lint --autofix',
+    ],
 };

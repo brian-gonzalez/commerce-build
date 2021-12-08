@@ -1,27 +1,20 @@
-*.js
 *.css
+*.js
 
-# SFRA Add-On Cartridges
-bc_*
-bm_*
-int_*
-lib_*
-plugin_*
+# Build Artifacts
+**/cartridge/static/
 
-# Add a negating pattern to include an external cartridge
-# !plugin_wishlists/
-
-# SFRA Base Cartridges
+# Cartridges
 app_storefront_base/
 bm_app_storefront_base/
 modules/
 
-# SFRA Build
-**/cartridge/static/
-coverage/
-doc/
-bin/
-codecept.conf.js
+# Add-On Cartridges
+# bc_*
+# bm_*
+# int_*
+# lib_*
+# plugin_*
 
-package.json
-
+# Add a negating pattern to include an external cartridge
+# !**/*_custom_*
