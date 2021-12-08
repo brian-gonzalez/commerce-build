@@ -1,6 +1,15 @@
 *.css
+*.js
 
-# SFRA Add-On Cartridges
+# Build Artifacts
+**/cartridge/static/
+
+# Cartridges
+app_storefront_base/
+bm_app_storefront_base/
+modules/
+
+# Add-On Cartridges
 # bc_*
 # bm_*
 # int_*
@@ -9,11 +18,3 @@
 
 # Add a negating pattern to include an external cartridge
 # !**/*_custom_*
-
-# SFRA Base Cartridges
-app_storefront_base/
-bm_app_storefront_base/
-modules/
-
-# SFRA Build
-**/cartridge/static/

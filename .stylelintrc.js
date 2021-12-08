@@ -1,5 +1,8 @@
 module.exports = {
-    plugins: ['stylelint-scss'],
+    plugins: [
+        'stylelint-scss',
+        'stylelint-order',
+    ],
     extends: 'stylelint-config-standard',
     rules: {
         'at-rule-empty-line-before': [
@@ -20,6 +23,14 @@ module.exports = {
         'font-family-no-missing-generic-family-keyword': null,
         indentation: 4,
         'no-descending-specificity': null,
+        'order/order': [
+            'custom-properties',
+            'dollar-variables',
+            'declarations',
+            'rules',
+            'at-rules',
+        ],
+        'order/properties-alphabetical-order': true,
         'scss/at-import-no-partial-leading-underscore': true,
         'scss/at-import-partial-extension-blacklist': ['scss'],
         'scss/at-rule-no-unknown': true,
@@ -38,4 +49,10 @@ module.exports = {
             },
         ],
     },
+    overrides: [
+        {
+            files: ['**/*.scss'],
+            customSyntax: 'postcss-scss',
+        },
+    ],
 };

@@ -2,21 +2,21 @@
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
-  "stylelint.enable": true,
+  "javascript.validate.enable": false,
   "editor.formatOnSave": true,
   "extension.prophet.htmlhint.enabled": false,
-  // "extension.prophet.upload.enabled": true,
   "files.eol": "\n",
-  "javascript.validate.enable": false,
   "prettier.enable": false,
+  "stylelint.validate": [
+    "css",
+    "scss"
+  ],
   "[json]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true,
     }
   },
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true,
     }

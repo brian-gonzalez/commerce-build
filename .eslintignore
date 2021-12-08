@@ -1,13 +1,13 @@
-# SFRA Base Cartridges
-app_storefront_base/
-bm_app_storefront_base/
-modules/
+package.json
 
-# SFRA Build
+# Build Artifacts
 **/cartridge/static/
 coverage/
 
-package.json
+# Cartridges
+app_storefront_base/
+bm_app_storefront_base/
+modules/
 
 # Module Build Only
 !.*
