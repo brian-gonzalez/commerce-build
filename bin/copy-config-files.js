@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-const fs = require('fs');
-const path = require('path');
+const { resolve } = require('path');
+const { copySync } = require('../src/utils/copy-sync');
 const { appRoot } = require('../src/utils/app-root');
 
-async function copyConfigFiles() {
+function copyConfigFiles() {
+    const configDir = resolve(__dirname, '../.commerce-build-config');
+    const destDir = `${appRoot}/.test-commerce-build-config`;
+
     try {
-        await fs.copy(path.resolve(__dirname, '../.commerce-build-config'), `${appRoot}/.commerce-build-config`);
+        copySync(configDir, destDir);
         console.log('commerce-config successfully copied!');
     } catch (err) {
-        console.error(err);
+        console.error(`Error: ${err.message}`);
     }
 }
 

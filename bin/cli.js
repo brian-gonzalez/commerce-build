@@ -4,7 +4,6 @@ const { Command, Option, Argument } = require('commander');
 
 const { version, description } = require('../package.json');
 const { cliHandler } = require('./cli-handler');
-const { copyConfigFiles } = require('./copy-config-files');
 
 const program = new Command();
 
@@ -20,7 +19,7 @@ program
 program
     .command('init')
     .description('copy configuration files to project root')
-    .action(() => copyConfigFiles());
+    .action(() => require('./copy-config-files').copyConfigFiles());
 
 program
     .command('build', { isDefault: true })
