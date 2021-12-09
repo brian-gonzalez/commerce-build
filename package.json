@@ -26,7 +26,7 @@
       "url": "https://github.com/brian-gonzalez"
     }
   ],
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.1",
   "engines": {
     "node": ">=16.0.0"
   },
