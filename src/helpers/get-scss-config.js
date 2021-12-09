@@ -1,9 +1,9 @@
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const RevolverPlugin = require('revolver-webpack-plugin');
-// const StylelintPlugin = require('stylelint-webpack-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
 const { join, resolve } = require('path');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 const { getSCSSPaths } = require('./get-scss-paths');
 const { getIncludePaths } = require('./get-include-paths');
@@ -42,18 +42,6 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                             },
                             {
                                 loader: 'postcss-loader',
-                                options: {
-                                    postcssOptions: {
-                                        plugins: [
-                                            [
-                                                'postcss-preset-env',
-                                                {
-                                                    // Options
-                                                },
-                                            ],
-                                        ],
-                                    },
-                                },
                             },
                             {
                                 loader: 'sass-loader',
@@ -73,20 +61,6 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                     },
                 ],
             },
-            plugins: [
-                // Fixes: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/151
-                new FixStyleOnlyEntriesPlugin({
-                    silent: true,
-                }),
-                new MiniCssExtractPlugin({
-                    filename: isProduction ? '[name].[contenthash].css' : '[name].css',
-                    chunkFilename: isProduction ? '[id].[contenthash].css' : '[id].css',
-                }),
-
-                // BUG: If all files being built are ignored by stylelint, it will throw an error
-                // similar to --allow-empty-input
-                // new StylelintPlugin(),
-            ],
             resolve: {
                 alias: options.cartridgePaths.aliases,
                 cacheWithContext: true,
@@ -104,12 +78,16 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                     return plugins;
                 })(options.cartridgePaths.useRevolver, options.cartridgePaths.paths),
             },
+            plugins: [
+                new RemoveEmptyScriptsPlugin(),
+                new MiniCssExtractPlugin(),
+                // BUG: If all files being built are ignored by stylelint, it will throw an error
+                // similar to --allow-empty-input
+                new StylelintPlugin(),
+            ],
             optimization: {
                 minimizer: [
-                    new ESBuildMinifyPlugin({
-                        target: 'es2015',
-                        css: true,
-                    }),
+                    new CssMinimizerPlugin(),
                 ],
             },
             snapshot: {

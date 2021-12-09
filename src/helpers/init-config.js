@@ -11,7 +11,7 @@ function initConfig(webpackArgs) {
     // Set process.env.NODE_ENV for modules that utilize its value
     // i.e. You can specify different browserslist queries for various environments.
     // Browserslist will choose query according to BROWSERSLIST_ENV or NODE_ENV variables.
-    process.env.NODE_ENV = process.env.NODE_ENV || webpackArgs.mode || 'development';
+    process.env.NODE_ENV = process.env.NODE_ENV || webpackArgs.env.mode || 'development';
 
     // 1. get default config values
     const defaultConfig = require('../config/commercebuildrc.default.json');
@@ -32,13 +32,13 @@ function initConfig(webpackArgs) {
 
         for (let i = 0; i < configNames.length; i++) {
             try {
-            // eslint-disable-next-line import/no-dynamic-require
+                // eslint-disable-next-line import/no-dynamic-require
                 configFile = require(`${appRoot}/${configNames[i]}`);
 
                 // if file is found and loaded, exit loop early
                 break;
             } catch (err) {
-            // config file not found, intercept error and continue
+                // config file not found, intercept error and continue
             }
         }
     }
@@ -59,8 +59,8 @@ function initConfig(webpackArgs) {
         pkgConfig || {},
         configFile || {},
         dotENVConfig || {},
-        // cliArgs || {},
         webpackArgs.env.build || {}, // commerce-build config should be in env.build.<prop>
+        // cliArgs.build || {},
     );
 
     return mergedConfig;

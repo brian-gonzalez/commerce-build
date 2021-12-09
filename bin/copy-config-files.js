@@ -3,9 +3,9 @@
 
 const fs = require('fs');
 const path = require('path');
-// const appRoot = require('app-root-dir');
+const { appRoot } = require('../src/utils/app-root');
 
-async function copyFiles() {
+async function copyConfigFiles() {
     try {
         await fs.copy(path.resolve(__dirname, '../.commerce-build-config'), `${appRoot}/.commerce-build-config`);
         console.log('commerce-config successfully copied!');
@@ -14,4 +14,4 @@ async function copyFiles() {
     }
 }
 
-copyFiles();
+exports.copyConfigFiles = copyConfigFiles;

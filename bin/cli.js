@@ -1,21 +1,60 @@
 #!/usr/bin/env node
 
-const { Command } = require('commander');
+const { Command, Option, Argument } = require('commander');
+
 const { version, description } = require('../package.json');
+const { cliHandler } = require('./cli-handler');
+const { copyConfigFiles } = require('./copy-config-files');
 
 const program = new Command();
 
-// To keep this file minimal, action handlers are moved to executableFile
-// command names are based on file names creating duplicates
-// since multiple files share the same functionality in ./command-handler.js
+function errorColor(str) {
+    // Add ANSI escape codes to display text in red.
+    return `\x1b[31m${str}\x1b[0m`;
+}
+
 program
     .version(version, '-v, --version', 'output the current version')
-    .description(description)
-    .command('build', 'build assets', { executableFile: 'build' })
-    .command('fix', 'fix lint errors', { executableFile: 'fix' })
-    .command('init', 'copy base config files to project root', { executableFile: 'init' })
-    .command('lint', 'lint project', { executableFile: 'lint' })
-    .command('watch', 'watch project for file changes', { executableFile: 'watch' })
+    .description(description);
+
+program
+    .command('init')
+    .description('copy configuration files to project root')
+    .action(() => copyConfigFiles());
+
+program
+    .command('build', { isDefault: true })
+    .description('build cartridge assets')
+    .addArgument(new Argument('[scope]', 'set scope commerce-build commands').choices(['isml', 'js', 'scss']))
+    .addOption(new Option('--mode <env>', 'build environment mode').choices(['development', 'production']))
+    .action((scope, options, command) => cliHandler(scope, options, command))
+    .allowUnknownOption()
     .showSuggestionAfterError();
+
+program
+    .command('fix')
+    .description('fix lint errors in cartridge source files')
+    .addArgument(new Argument('[scope]', 'set scope commerce-build commands').choices(['isml', 'js', 'scss']))
+    .action((scope, options, command) => cliHandler(scope, options, command))
+    .showSuggestionAfterError();
+
+program
+    .command('lint')
+    .description('lint cartridge source files')
+    .addArgument(new Argument('[scope]', 'set scope commerce-build commands').choices(['isml', 'js', 'scss']))
+    .action((scope, options, command) => cliHandler(scope, options, command))
+    .showSuggestionAfterError();
+
+program
+    .command('watch')
+    .description('monitor cartridge source files for changes')
+    .addArgument(new Argument('[scope]', 'set scope commerce-build commands').choices(['isml', 'js', 'scss']))
+    .action((scope, options, command) => cliHandler(scope, options, command))
+    .showSuggestionAfterError();
+
+program
+    .configureOutput({
+        outputError: (str, write) => write(errorColor(str)),
+    });
 
 program.parse(process.argv);
