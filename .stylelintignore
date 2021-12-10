@@ -1,5 +1,4 @@
 *.css
-*.js
 
 # Build Artifacts
 **/cartridge/static/

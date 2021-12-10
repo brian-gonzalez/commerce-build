@@ -48,6 +48,13 @@ module.exports = {
                 ignorePseudoClasses: ['focus-visible'],
             },
         ],
+        'string-quotes': 'single',
+        'selector-class-pattern': [
+            '^[a-z][a-z0-9]*(-[a-z0-9]+|_{2}[a-z0-9]+|-{2}[a-z0-9]+){0,8}$',
+            {
+                message: 'Expected class selector: kebab-case or BEM-case. recommended up to two BEM segments',
+            },
+        ],
     },
     overrides: [
         {

@@ -11,7 +11,7 @@
       "hostname": "<*.demandware.net (without https/http)>",
       "username": "<username>",
       "password": "<password>",
-      "codeversion": "<code-version>",
+      "codeversion": "version1",
       "cartridgeroot": "cartridges/",
       "workspaceroot": "${workspaceFolder}"
     }
