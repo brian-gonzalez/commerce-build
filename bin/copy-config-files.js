@@ -7,7 +7,7 @@ const { appRoot } = require('../src/utils/app-root');
 
 function copyConfigFiles() {
     const configDir = resolve(__dirname, '../.commerce-build-config');
-    const destDir = `${appRoot}/.test-commerce-build-config`;
+    const destDir = `${appRoot}/.commerce-build-config`;
 
     try {
         copySync(configDir, destDir);
