@@ -15,7 +15,7 @@ const { toArray } = require('./utils/to-array');
  * @param {Object} mergeStrategy Strategy for merging webpack configurations
  * @return {Object} Returns final configuration object
  */
-function init(webpackArgs, customConfig = false, mergeStrategy = {}) {
+function commerceBuild(webpackArgs, customConfig = false, mergeStrategy = {}) {
     const config = initConfig(webpackArgs);
     const scope = getConfig(config, 'scope');
     const options = {
@@ -42,4 +42,4 @@ function init(webpackArgs, customConfig = false, mergeStrategy = {}) {
     return configList;
 }
 
-exports.init = init;
+exports.commerceBuild = commerceBuild;

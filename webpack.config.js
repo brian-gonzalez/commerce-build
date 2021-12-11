@@ -1,6 +1,6 @@
-const { init } = require('./src');
+const { commerceBuild } = require('./src');
 
-module.exports = (env, argv) => init(argv);
+module.exports = (env, argv) => commerceBuild(argv);
 
 /*
 // Use Babel for compiling over esbuild for better support es5
@@ -43,5 +43,5 @@ const mergeStrategy = {
     },
 };
 
-module.exports = (env, argv) => init(argv, customConfig, mergeStrategy);
+module.exports = (env, argv) => commerceBuild(argv, customConfig, mergeStrategy);
 */
