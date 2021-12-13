@@ -86,7 +86,7 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                 new MiniCssExtractPlugin(),
                 // BUG: If all files being built are ignored by stylelint, it will throw an error
                 // similar to --allow-empty-input
-                new StylelintPlugin(),
+                // new StylelintPlugin(),
             ],
             optimization: {
                 minimizer: [
