@@ -3,11 +3,11 @@ const glob = require('fast-glob');
 const { basename, join } = require('path');
 
 const { getConfig } = require('./get-config');
-const { getPathData } = require('./get-path-data');
+const { getIOPaths } = require('./get-io-paths');
 
 function getSCSSPaths(config, cartridgeName, scope) {
     const cwd = process.cwd();
-    const pathData = getPathData(config, cartridgeName, scope);
+    const pathData = getIOPaths(config, cartridgeName, scope);
 
     // Name of the container/main directory that hosts locales,
     // which in turn host the files directory.

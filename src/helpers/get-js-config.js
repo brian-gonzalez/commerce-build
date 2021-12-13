@@ -20,9 +20,11 @@ function getJSConfig(config, cartridgeName, scope, options) {
             name: `js-${cartridgeName}`,
             output: {
                 path: join(cwd, jsPathData.outputPath),
-                filename: '[name].js',
-                chunkFilename: '[name].js',
-                clean: true,
+                clean: {
+                    keep(asset) {
+                        return asset.indexOf('/js/') === -1;
+                    },
+                },
             },
             module: {
                 rules: [
@@ -95,6 +97,15 @@ function getJSConfig(config, cartridgeName, scope, options) {
                     hash: true,
                     timestamp: true,
                 },
+            },
+            stats: {
+                assetsSort: 'name',
+                assetsSpace: Number.MAX_SAFE_INTEGER,
+                entrypoints: false,
+                groupAssetsByPath: false,
+                groupModulesByPath: false,
+                modulesSort: 'name',
+                modulesSpace: 5,
             },
         };
 

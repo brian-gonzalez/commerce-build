@@ -1,7 +1,7 @@
 const { getMainPaths } = require('./get-main-paths');
 const { getRootFiles } = require('./get-root-files');
 const { getConfig } = require('./get-config');
-const { getPathData } = require('./get-path-data');
+const { getIOPaths } = require('./get-io-paths');
 const { toArray } = require('../utils/to-array');
 
 /**
@@ -10,7 +10,7 @@ const { toArray } = require('../utils/to-array');
  * @return {[Object literal]}           [description]
  */
 function getJSPaths(config, cartridgeName, scope, options) {
-    const pathData = getPathData(config, cartridgeName, scope);
+    const pathData = getIOPaths(config, cartridgeName, scope);
     const mainPaths = getMainPaths(pathData.inputPath, options.mainFiles);
     const revolverExcludeList = toArray(getConfig(config, 'revolverExclude', scope));
 

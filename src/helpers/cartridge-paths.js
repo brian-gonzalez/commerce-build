@@ -1,7 +1,7 @@
 const { join } = require('path');
 const { buildAliases } = require('./build-aliases');
 const { getConfig } = require('./get-config');
-const { getPathData } = require('./get-path-data');
+const { getIOPaths } = require('./get-io-paths');
 const { constructPath } = require('../utils/construct-path');
 const { hasMagic } = require('../utils/has-magic');
 const { toArray } = require('../utils/to-array');
@@ -31,7 +31,7 @@ function cartridgePaths(config, scope) {
         const cartridgeParts = cartridge.split('~');
         // const [cartridgeName] = cartridge.split('~');
 
-        let { inputPath } = getPathData(config, cartridgeParts[0], scope);
+        let { inputPath } = getIOPaths(config, cartridgeParts[0], scope);
         const mainDirIndex = inputPath.indexOf(`/${mainDir}/`) + mainDir.length + 1;
         const mainPath = inputPath.substring(0, mainDirIndex);
 

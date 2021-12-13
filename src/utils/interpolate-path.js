@@ -1,14 +1,14 @@
-function replaceTemplate(path, templateString, value) {
-    const updateRegEx = new RegExp(`{${templateString}}`, 'g');
+function replaceTemplate(path, part, replacement) {
+    const partRegEx = new RegExp(`{${part}}`, 'g');
 
-    return path.replace(updateRegEx, value);
+    return path.replace(partRegEx, replacement);
 }
 
-function interpolatePath(pathObj, cartridgeName) {
+function interpolatePath(pathObj, pathPart, partReplacement) {
     const updatedPath = {};
 
     Object.entries(pathObj).forEach(([key, path]) => {
-        updatedPath[key] = replaceTemplate(path, 'cartridge', cartridgeName);
+        updatedPath[key] = replaceTemplate(path, pathPart, partReplacement);
     });
 
     return updatedPath;

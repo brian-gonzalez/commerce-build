@@ -1,15 +1,15 @@
 const { getConfig } = require('./get-config');
 const { interpolatePath } = require('../utils/interpolate-path');
 
-function getPathData(config, cartridgeName, scope) {
-    const pathPairing = {
+function getIOPaths(config, cartridgeName, scope) {
+    const pathObj = {
         inputPath: getConfig(config, 'inputPath', scope),
         outputPath: getConfig(config, 'outputPath', scope),
     };
 
-    const pathData = interpolatePath(pathPairing, cartridgeName);
+    const pathData = interpolatePath(pathObj, 'cartridge', cartridgeName);
 
     return pathData;
 }
 
-exports.getPathData = getPathData;
+exports.getIOPaths = getIOPaths;

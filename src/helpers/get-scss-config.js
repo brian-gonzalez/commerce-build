@@ -25,8 +25,11 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
             name: `scss-${cartridgeName}`,
             output: {
                 path: join(cwd, scssPathData.outputPath),
-                filename: '[name].js',
-                clean: true,
+                clean: {
+                    keep(asset) {
+                        return asset.indexOf('/css/') === -1;
+                    },
+                },
             },
             module: {
                 rules: [
@@ -52,8 +55,8 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                                     // implementation: require('sass'),
                                     sassOptions: {
                                         // Fibers is not compatible with Node.js v16.0.0 or later
-                                        fiber: false,
                                         includePaths: getIncludePaths(config, scope),
+                                        quietDeps: true,
                                     },
                                 },
                             },
@@ -110,13 +113,15 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                     timestamp: true,
                 },
             },
-            // stats: {
-            //     chunksSort: 'name',
-            //     modules: false,
-            //     children: false,
-            //     entrypoints: false,
-            //     chunkOrigins: false,
-            // },
+            stats: {
+                assetsSort: 'name',
+                assetsSpace: Number.MAX_SAFE_INTEGER,
+                entrypoints: false,
+                groupAssetsByPath: false,
+                groupModulesByPath: false,
+                modulesSort: 'name',
+                modulesSpace: 5,
+            },
         };
 
         return namedConfig;
