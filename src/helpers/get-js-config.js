@@ -66,17 +66,17 @@ function getJSConfig(config, cartridgeName, scope, options) {
                         target: 'es2015',
                     }),
                 ],
-                moduleIds: 'deterministic',
-                runtimeChunk: 'single',
-                splitChunks: {
-                    chunks: 'all',
-                    cacheGroups: {
-                        vendor: {
-                            test: /[\\/]node_modules[\\/]/,
-                            name: 'vendors',
-                        },
-                    },
-                },
+                // moduleIds: 'deterministic',
+                // runtimeChunk: 'single',
+                // splitChunks: {
+                //     chunks: 'all',
+                //     cacheGroups: {
+                //         vendor: {
+                //             test: /[\\/]node_modules[\\/]/,
+                //             name: 'vendors',
+                //         },
+                //     },
+                // },
             },
             snapshot: {
                 managedPaths: [

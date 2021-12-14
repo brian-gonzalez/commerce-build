@@ -3,7 +3,6 @@
   // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "coenraads.bracket-pair-colorizer-2",
     "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
     "EditorConfig.EditorConfig",
@@ -15,8 +14,6 @@
     "SqrTT.prophet",
     "streetsidesoftware.code-spell-checker",
     "stylelint.vscode-stylelint",
-    "usernamehw.errorlens",
-    "vincaslt.highlight-matching-tag",
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

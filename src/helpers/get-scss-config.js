@@ -2,7 +2,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const RevolverPlugin = require('revolver-webpack-plugin');
-const StylelintPlugin = require('stylelint-webpack-plugin');
+// const StylelintPlugin = require('stylelint-webpack-plugin');
 const { join, resolve } = require('path');
 
 const { getSCSSPaths } = require('./get-scss-paths');
