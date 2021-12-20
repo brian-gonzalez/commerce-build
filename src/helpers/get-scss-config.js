@@ -54,9 +54,8 @@ function getSCSSConfig(config, cartridgeName, scope, options) {
                                     // Prefer `dart-sass`
                                     // implementation: require('sass'),
                                     sassOptions: {
-                                        // Fibers is not compatible with Node.js v16.0.0 or later
                                         includePaths: getIncludePaths(config, scope),
-                                        quietDeps: true,
+                                        // quietDeps: true,
                                     },
                                 },
                             },

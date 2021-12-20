@@ -1,7 +1,6 @@
 const ESLintPlugin = require('eslint-webpack-plugin');
 const RevolverPlugin = require('revolver-webpack-plugin');
 const { join, resolve } = require('path');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 const { getJSPaths } = require('./get-js-paths');
 
@@ -33,9 +32,14 @@ function getJSConfig(config, cartridgeName, scope, options) {
                         exclude: [
                             /[\\/]node_modules[\\/]/,
                         ],
-                        loader: 'esbuild-loader',
-                        options: {
-                            target: 'es2015',
+                        use: {
+                            loader: 'babel-loader',
+                            options: {
+                                cacheDirectory: true,
+                                presets: [
+                                    '@babel/preset-env',
+                                ],
+                            },
                         },
                     },
                 ],
@@ -60,24 +64,19 @@ function getJSConfig(config, cartridgeName, scope, options) {
                     return plugins;
                 })(options.cartridgePaths.useRevolver, options.cartridgePaths.paths),
             },
-            optimization: {
-                minimizer: [
-                    new ESBuildMinifyPlugin({
-                        target: 'es2015',
-                    }),
-                ],
-                // moduleIds: 'deterministic',
-                // runtimeChunk: 'single',
-                // splitChunks: {
-                //     chunks: 'all',
-                //     cacheGroups: {
-                //         vendor: {
-                //             test: /[\\/]node_modules[\\/]/,
-                //             name: 'vendors',
-                //         },
-                //     },
-                // },
-            },
+            // optimization: {
+            //     moduleIds: 'deterministic',
+            //     runtimeChunk: 'single',
+            //     splitChunks: {
+            //         chunks: 'all',
+            //         cacheGroups: {
+            //             vendor: {
+            //                 test: /[\\/]node_modules[\\/]/,
+            //                 name: 'vendors',
+            //             },
+            //         },
+            //     },
+            // },
             snapshot: {
                 managedPaths: [
                     resolve(__dirname, '../node_modules'),

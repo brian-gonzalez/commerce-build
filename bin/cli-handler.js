@@ -75,7 +75,7 @@ function cliHandler(scope, options, program) {
     } else {
         const labels = scopes.join().toUpperCase();
         const colors = scopeColors.join();
-        const allCommand = ['concurrently', `-n="${labels}"`, `-c="${colors}"`];
+        const allCommand = ['concurrently', `-n="${labels}"`, `-c="${colors}"`, '--kill-others-on-fail'];
 
         scopes.forEach((scopeItem) => {
             allCommand.push(`"${actions[command][scopeItem].join(' ')}"`);
