@@ -13,8 +13,7 @@ Thumbs.db
 .idea
 .project
 .settings
-# Do not ignore. Needed to share settings.
-# .vscode
+.vscode
 
 # Project Specific
 .changelog
