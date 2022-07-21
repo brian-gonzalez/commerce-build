@@ -65,7 +65,7 @@ function cliHandler(scope, options, program) {
     if (scope) {
         const childProcess = spawn(
             'npx',
-            actions[command][scope],
+            actions[command][scope].join(' '),
             { stdio: 'inherit', shell: true },
         );
 
@@ -75,7 +75,7 @@ function cliHandler(scope, options, program) {
     } else {
         const labels = scopes.join().toUpperCase();
         const colors = scopeColors.join();
-        const allCommand = ['concurrently', `-n="${labels}"`, `-c="${colors}"`, '--kill-others-on-fail'];
+        const allCommand = ['concurrently', `-n="${labels}"`, `-c="${colors}"`];
 
         scopes.forEach((scopeItem) => {
             allCommand.push(`"${actions[command][scopeItem].join(' ')}"`);

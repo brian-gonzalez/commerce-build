@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 const { join } = require('path');
+const appRoot = require('app-root-path');
+
 const { copySync } = require('../utils/copy-sync');
-const { appRoot } = require('../utils/app-root');
 
 function bundleBaseFonts() {
     const fontBaseDir = join(appRoot, 'cartridges/app_storefront_base/cartridge/static/default/fonts');

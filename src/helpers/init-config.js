@@ -1,7 +1,8 @@
 require('dotenv').config();
 // const minimist = require('minimist');
 const { merge } = require('webpack-merge');
-const { appRoot } = require('../utils/app-root');
+const appRoot = require('app-root-path');
+
 const { envXmog } = require('../utils/dontenv-xmog');
 
 function initConfig(webpackArgs) {

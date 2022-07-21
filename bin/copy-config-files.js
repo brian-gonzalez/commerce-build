@@ -2,8 +2,9 @@
 /* eslint-disable no-console */
 
 const { resolve } = require('path');
+const appRoot = require('app-root-path');
+
 const { copySync } = require('../src/utils/copy-sync');
-const { appRoot } = require('../src/utils/app-root');
 
 function copyConfigFiles() {
     const configDir = resolve(__dirname, '../.commerce-build-config');
